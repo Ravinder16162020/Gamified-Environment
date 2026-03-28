@@ -1,0 +1,129 @@
+/* EcoBot Custom Styles */
+
+/* Custom scrollbar */
+.customScrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.customScrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.customScrollbar::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 10px;
+}
+
+/* Typing indicator dots animation */
+@keyframes bounceSlow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.dot1 {
+  animation: bounceSlow 1s infinite 0ms;
+}
+
+.dot2 {
+  animation: bounceSlow 1s infinite 200ms;
+}
+
+.dot3 {
+  animation: bounceSlow 1s infinite 400ms;
+}
+
+/* Message bubble animations */
+@keyframes messageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.messageSlideIn {
+  animation: messageSlideIn 0.3s ease-out;
+}
+
+/* Suggestion chip hover effect */
+.suggestionChip {
+  transition: all 0.2s ease;
+}
+
+.suggestionChip:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Input focus ring animation */
+.inputFocusRing {
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+/* Send button transition */
+.sendButton {
+  transition: all 0.2s ease;
+}
+
+.sendButton:not(:disabled):hover {
+  transform: scale(1.05);
+}
+
+/* Avatar online indicator pulse */
+@keyframes onlinePulse {
+  0%, 100% { 
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
+  }
+  50% { 
+    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0);
+  }
+}
+
+.onlineIndicator {
+  animation: onlinePulse 2s infinite;
+}
+
+/* Bot avatar gradient */
+.botAvatar {
+  background: linear-gradient(135deg, #4EA24E 0%, #34d399 100%);
+}
+
+/* Message content markdown styling */
+.messageContent strong {
+  font-weight: 700;
+  color: inherit;
+}
+
+.messageContent ul {
+  list-style-type: disc;
+  padding-left: 1.25rem;
+}
+
+.messageContent li {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Chat container fade at bottom */
+.chatFade {
+  mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
+}
+
+/* Smooth transitions for all interactive elements */
+.smoothTransition {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Typing indicator container */
+.typingContainer {
+  background: rgba(226, 232, 240, 0.5);
+}
+
+/* Header shadow on scroll */
+.headerShadow {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}

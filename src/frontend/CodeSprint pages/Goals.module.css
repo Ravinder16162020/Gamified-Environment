@@ -1,0 +1,56 @@
+/* Goals Page Custom Styles */
+
+/* Heatmap cell tooltip */
+.heatmapCell .tooltip {
+  display: none;
+}
+
+.heatmapCell:hover .tooltip {
+  display: block;
+}
+
+/* Custom scrollbar */
+.customScrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.customScrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.customScrollbar::-webkit-scrollbar-thumb {
+  background: #2087B3;
+  border-radius: 10px;
+}
+
+.customScrollbar::-webkit-scrollbar-thumb:hover {
+  background: #7bd0ff;
+}
+
+/* Animations */
+@keyframes flamePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+@keyframes chestBounce {
+  from { transform: translateY(0); }
+  to { transform: translateY(-12px); }
+}
+
+@keyframes snowflakeSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animateFlamePulse {
+  animation: flamePulse 1.5s infinite;
+}
+
+.animateChestBounce {
+  animation: chestBounce 0.6s ease-in-out infinite alternate;
+}
+
+.animateSnowflakeSpin {
+  animation: snowflakeSpin 3s linear infinite;
+}

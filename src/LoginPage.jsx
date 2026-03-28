@@ -13,11 +13,16 @@ const LoginPage = () => {
     e.preventDefault();
     console.log('Login submitted:', { email, password });
     
-    // Test credentials: student@ecosprint.com / sprint123
+    // EcoSprint credentials: student@ecosprint.com / sprint123
     if (email === 'student@ecosprint.com' && password === 'sprint123') {
       navigate('/dashboard');
-    } else {
-      alert('Invalid credentials. Try: student@ecosprint.com / sprint123');
+    }
+    // CodeSprint credentials: college@codesprint.com / code123
+    else if (email === 'college@codesprint.com' && password === 'code123') {
+      navigate('/onboarding1');
+    }
+    else {
+      alert('Invalid credentials. Try: student@ecosprint.com / sprint123 OR college@codesprint.com / code123');
     }
   };
 

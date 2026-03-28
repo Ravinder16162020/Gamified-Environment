@@ -1,0 +1,75 @@
+/* Challenges Page Custom Styles */
+
+.glassPanel {
+  background: rgba(41, 42, 45, 0.4);
+  backdrop-filter: blur(12px);
+}
+
+.difficultyCard {
+  transition: all 0.3s ease;
+}
+
+.difficultyCard.activeNovice {
+  border-color: #4EA24E;
+  box-shadow: 0 0 15px rgba(78, 162, 78, 0.15);
+}
+
+.difficultyCard.activeExpert {
+  border-color: #E85A18;
+  box-shadow: 0 0 15px rgba(232, 90, 24, 0.15);
+}
+
+.difficultyCard.activeMaster {
+  border-color: #ffb3b0;
+  box-shadow: 0 0 15px rgba(255, 179, 176, 0.15);
+}
+
+.codeSuccessBg {
+  background: radial-gradient(circle at center, rgba(78, 162, 78, 0.15) 0%, transparent 70%);
+}
+
+/* Custom scrollbar */
+.customScrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.customScrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.customScrollbar::-webkit-scrollbar-thumb {
+  background: #2087B3;
+  border-radius: 10px;
+}
+
+.customScrollbar::-webkit-scrollbar-thumb:hover {
+  background: #7bd0ff;
+}
+
+/* Animations */
+@keyframes flamePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+@keyframes chestBounce {
+  from { transform: translateY(0); }
+  to { transform: translateY(-12px); }
+}
+
+@keyframes snowflakeSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animateFlamePulse {
+  animation: flamePulse 1.5s infinite;
+}
+
+.animateChestBounce {
+  animation: chestBounce 0.6s ease-in-out infinite alternate;
+}
+
+.animateSnowflakeSpin {
+  animation: snowflakeSpin 3s linear infinite;
+}

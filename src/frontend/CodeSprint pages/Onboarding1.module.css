@@ -1,0 +1,116 @@
+/* Onboarding1 Custom Styles */
+
+/* Speech bubble with pointer */
+.speechBubble::after {
+  content: '';
+  position: absolute;
+  left: -10px;
+  top: 20px;
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 10px solid #2d2e2f;
+}
+
+/* Java card selected state */
+.selectedJava {
+  background-color: #3d1a00 !important;
+  border-color: #E85A18 !important;
+}
+
+/* Python card selected state */
+.selectedPython {
+  background-color: #2d2800 !important;
+  border-color: #FFD43B !important;
+}
+
+/* Gentle bounce animation for mascot */
+@keyframes gentleBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.animateBounce {
+  animation: gentleBounce 2s infinite ease-in-out;
+}
+
+/* Progress bar fill animation */
+.progressFill {
+  transition: width 0.5s ease-out;
+}
+
+/* Card hover effects */
+.languageCard {
+  transition: all 0.2s ease;
+}
+
+.languageCard:hover {
+  transform: scale(1.02);
+}
+
+.languageCard:active {
+  transform: scale(0.98);
+}
+
+/* Continue button states */
+.continueBtn {
+  transition: all 0.3s ease;
+}
+
+.continueBtn:disabled {
+  background-color: #424548;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: not-allowed;
+}
+
+.continueBtn:not(:disabled) {
+  background-color: #2087B3;
+  color: white;
+}
+
+.continueBtn:not(:disabled):hover {
+  opacity: 0.9;
+}
+
+.continueBtn:not(:disabled):active {
+  transform: scale(0.95);
+}
+
+/* Dark theme base */
+.darkBg {
+  background-color: #1a1b1e;
+}
+
+.cardBg {
+  background-color: #2d2e2f;
+}
+
+.borderGray {
+  border-color: #424548;
+}
+
+/* Brand colors */
+.brandColor {
+  color: #2087B3;
+}
+
+.brandBg {
+  background-color: #2087B3;
+}
+
+.javaAccent {
+  color: #E85A18;
+}
+
+.javaBg {
+  background-color: #E85A18;
+}
+
+.pythonAccent {
+  color: #FFD43B;
+}
+
+.pythonBg {
+  background-color: #FFD43B;
+}

@@ -1,0 +1,144 @@
+/* Practice Page Custom Styles */
+
+/* Custom scrollbar */
+.customScrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.customScrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.customScrollbar::-webkit-scrollbar-thumb {
+  background: #2087B3;
+  border-radius: 10px;
+}
+
+.customScrollbar::-webkit-scrollbar-thumb:hover {
+  background: #7bd0ff;
+}
+
+/* Custom scrollbar hide */
+.noScrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.noScrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Fade in animation */
+.fadeIn {
+  animation: fadeIn 0.2s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Scale in animation */
+.scaleIn {
+  animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes scaleIn {
+  from { 
+    transform: scale(0.9); 
+    opacity: 0; 
+  }
+  to { 
+    transform: scale(1); 
+    opacity: 1; 
+  }
+}
+
+/* Shimmer animation */
+.shimmer {
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { 
+    transform: translateX(-100%) skewX(-20deg); 
+  }
+  100% { 
+    transform: translateX(200%) skewX(-20deg); 
+  }
+}
+
+/* Filter pill active state */
+.filterPillActive {
+  background-color: rgba(32, 135, 179, 0.15);
+  color: #2087B3;
+  border-color: rgba(32, 135, 179, 0.3);
+}
+
+/* Difficulty button active states */
+.diffBtnEasyActive {
+  background-color: rgba(87, 222, 160, 0.1);
+  border-color: #57dea0;
+}
+
+.diffBtnMediumActive {
+  background-color: rgba(195, 192, 255, 0.1);
+  border-color: #c3c0ff;
+}
+
+.diffBtnHardActive {
+  background-color: rgba(255, 180, 171, 0.1);
+  border-color: #ffb4ab;
+}
+
+/* Test case item transitions */
+.testCaseItem {
+  transition: all 0.3s ease;
+}
+
+.testCasePassed {
+  border-color: #57dea0;
+  background: rgba(87, 222, 160, 0.05);
+}
+
+.testCaseFailed {
+  border-color: #ffb4ab;
+  background: rgba(255, 180, 171, 0.05);
+}
+
+/* Sidebar active state */
+.sidebarActive {
+  background: linear-gradient(to right, rgba(32, 135, 179, 0.12), transparent);
+  color: #2087B3;
+  border-left: 4px solid #2087B3;
+  font-weight: 700;
+}
+
+/* Problem card styles */
+.problemCard {
+  transition: all 0.2s ease;
+}
+
+.problemCardActive {
+  background-color: #1f1f23;
+  border-left-color: #2087B3;
+}
+
+/* Execution overlay */
+.executionOverlay {
+  backdrop-filter: blur(4px);
+}
+
+/* AI Panel slide in */
+.aiPanelSlideIn {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}

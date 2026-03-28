@@ -1,9 +1,14 @@
 import React from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { Zap, LayoutDashboard, BookOpen, Sword, Trophy, LineChart, Award, Bot, LogOut } from 'lucide-react';
-import { NavLink } from 'react-router-dom';
 import './SidebarEcoDboard.css';
 
 const SidebarEcoDboard = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    navigate('/login');
+  };
   return (
     <aside className="group w-20 hover:w-64 bg-white border-r border-slate-200 flex flex-col h-screen overflow-hidden shrink-0 transition-all duration-300 ease-in-out z-50 fixed left-0 top-0 overflow-x-hidden">
         <div className="flex items-center gap-2 px-6 py-6 border-b border-slate-100">
@@ -45,7 +50,10 @@ const SidebarEcoDboard = () => {
           </NavLink>
         </nav>
         <div className="p-4 mt-auto">
-          <div className="flex items-center gap-3 px-2 py-4 mb-2 border-b border-slate-100">
+          <NavLink 
+            to="/profile"
+            className={({ isActive }) => `flex items-center gap-3 px-2 py-4 mb-2 border-b border-slate-100 cursor-pointer hover:bg-slate-50 rounded-xl transition-colors ${isActive ? 'sidebar-active bg-slate-50' : ''}`}
+          >
             <img 
               alt="Alex Rivera" 
               className="w-8 h-8 rounded-full border border-slate-200 shrink-0" 
@@ -55,8 +63,11 @@ const SidebarEcoDboard = () => {
               <p className="text-xs font-bold truncate text-slate-900">Alex Rivera</p>
               <p className="text-[10px] text-slate-500 truncate">Advanced Learner</p>
             </div>
-          </div>
-          <button className="w-full flex items-center justify-center gap-4 px-2 py-2.5 rounded-xl font-bold text-sm text-white transition-opacity hover:opacity-90 logout-button">
+          </NavLink>
+          <button 
+            onClick={handleLogout}
+            className="w-full flex items-center justify-center gap-4 px-2 py-2.5 rounded-xl font-bold text-sm text-white transition-opacity hover:opacity-90 logout-button"
+          >
             <div className="w-6 h-6 flex items-center justify-center shrink-0">
               <LogOut className="w-5 h-5" />
             </div> 

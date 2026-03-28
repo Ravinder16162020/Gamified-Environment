@@ -1,0 +1,87 @@
+/* Onboarding2 Custom Styles */
+
+/* Robot bounce animation */
+@keyframes robotBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.animateRobotBounce {
+  animation: robotBounce 2s ease-in-out infinite;
+}
+
+/* Reason card transitions */
+.reasonCard {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reasonCardSelected {
+  background-color: #0E4A66;
+  border-color: #2087B3;
+  transform: scale(1.02);
+}
+
+/* Progress bar fill */
+.progressFill {
+  transition: width 0.5s ease-out;
+}
+
+/* Continue button states */
+.continueBtn {
+  transition: all 0.3s ease;
+}
+
+.continueBtnEnabled {
+  background-color: #2087B3;
+  color: white;
+}
+
+.continueBtnEnabled:hover {
+  box-shadow: 0 10px 25px -5px rgba(32, 135, 179, 0.3);
+}
+
+.continueBtnDisabled {
+  background-color: #424548;
+  color: rgba(255, 255, 255, 0.3);
+  cursor: not-allowed;
+}
+
+/* Speech bubble tail */
+.speechBubble::before {
+  content: '';
+  position: absolute;
+  left: -8px;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 0 16px 16px;
+  border-color: transparent transparent #2d2e2f transparent;
+}
+
+/* Dark theme colors */
+.darkBg {
+  background-color: #1a1b1e;
+}
+
+.cardBg {
+  background-color: #2d2e2f;
+}
+
+.cardBorder {
+  border-color: #424548;
+}
+
+.brandMuted {
+  background-color: #0E4A66;
+}
+
+/* Hover effects */
+.reasonCard:hover {
+  border-color: rgba(32, 135, 179, 0.4);
+}
+
+/* Smooth transitions */
+.smoothTransition {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}

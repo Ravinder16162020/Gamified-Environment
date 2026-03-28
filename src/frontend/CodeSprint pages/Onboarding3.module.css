@@ -1,0 +1,95 @@
+/* Onboarding3 Custom Styles */
+
+/* Level card transitions */
+.levelCard {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.levelCardSelected {
+  border-color: #2087B3;
+  background-color: #0E4A66;
+  transform: scale(1.01);
+  border-width: 2px;
+}
+
+/* Custom scrollbar */
+.customScrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.customScrollbar::-webkit-scrollbar-track {
+  background: #1a1b1e;
+}
+
+.customScrollbar::-webkit-scrollbar-thumb {
+  background: #424548;
+  border-radius: 10px;
+}
+
+/* Robot bounce animation */
+@keyframes bounceGentle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.animateBounceGentle {
+  animation: bounceGentle 3s ease-in-out infinite;
+}
+
+/* Progress bar fill */
+.progressFill {
+  transition: width 0.5s ease-out;
+}
+
+/* Continue button states */
+.continueBtn {
+  transition: all 0.3s ease;
+}
+
+.continueBtnEnabled {
+  background-color: #2087B3;
+  color: white;
+  box-shadow: 0 10px 25px -5px rgba(32, 135, 179, 0.3);
+}
+
+.continueBtnEnabled:active {
+  transform: scale(0.95);
+}
+
+.continueBtnDisabled {
+  background-color: #2d2e2f;
+  color: #6b7280;
+  cursor: not-allowed;
+}
+
+/* Bar animation for level icons */
+.barFill {
+  transition: background-color 0.2s ease;
+}
+
+/* Dark theme colors */
+.darkBg {
+  background-color: #1a1b1e;
+}
+
+.cardBg {
+  background-color: #2d2e2f;
+}
+
+.cardBorder {
+  border-color: #424548;
+}
+
+.brandDark {
+  background-color: #0E4A66;
+}
+
+/* Backdrop blur for footer */
+.backdropBlur {
+  backdrop-filter: blur(12px);
+}
+
+/* Smooth transitions */
+.smoothTransition {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}

@@ -1,0 +1,152 @@
+/* Profile Page Custom Styles */
+
+/* Sidebar transition */
+.sidebarTransition {
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Custom scrollbar */
+.customScrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.customScrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.customScrollbar::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 10px;
+}
+
+/* Profile avatar offset */
+.profileAvatarOffset {
+  margin-top: -40px;
+}
+
+/* Tab active state */
+.tabActive {
+  border-bottom: 2px solid #4EA24E;
+  color: #4EA24E;
+}
+
+/* Appearance option active */
+.appearanceActive {
+  border-color: #4EA24E;
+  background-color: rgba(78, 162, 78, 0.05);
+}
+
+.appearanceActive svg {
+  color: #4EA24E;
+}
+
+.appearanceActive span {
+  color: #0f172a;
+}
+
+/* Modal animations */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.modalAnimate {
+  animation: modalFadeIn 0.2s ease-out forwards;
+}
+
+/* Avatar hover overlay */
+.avatarOverlay {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.avatarContainer:hover .avatarOverlay {
+  opacity: 1;
+}
+
+/* Cover photo edit button */
+.coverEditBtn {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  transition: background 0.2s ease;
+}
+
+.coverEditBtn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Stats card hover */
+.statsCard {
+  transition: all 0.2s ease;
+}
+
+.statsCard:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+/* Activity item hover */
+.activityItem {
+  transition: background-color 0.2s ease;
+}
+
+.activityItem:hover {
+  background-color: #F8FAFC;
+}
+
+/* Toggle switch custom styles */
+.toggleSwitch {
+  transition: background-color 0.2s ease;
+}
+
+/* Setting section divider */
+.sectionDivider {
+  border-color: #f1f5f9;
+}
+
+/* Interest tag */
+.interestTag {
+  transition: all 0.2s ease;
+}
+
+.interestTag:hover {
+  background-color: #E1F2E1;
+  color: #4EA24E;
+}
+
+/* Completed module card */
+.moduleCard {
+  transition: all 0.2s ease;
+}
+
+.moduleCard:hover {
+  border-color: #4EA24E;
+  background-color: rgba(78, 162, 78, 0.02);
+}
+
+/* Tab button transition */
+.tabButton {
+  transition: all 0.2s ease;
+}
+
+/* Danger zone section */
+.dangerZone {
+  background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%);
+}
+
+/* Modal backdrop */
+.modalBackdrop {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+/* Smooth transition for all interactive elements */
+.smoothTransition {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}

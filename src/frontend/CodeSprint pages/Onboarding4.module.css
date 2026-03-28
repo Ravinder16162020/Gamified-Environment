@@ -1,0 +1,92 @@
+/* Onboarding4 Custom Styles */
+
+/* Commitment card transitions */
+.commitmentCard {
+  transition: all 0.2s ease;
+}
+
+.commitmentCardSelected {
+  border-color: #2087B3;
+  background-color: #0E4A66;
+  border-width: 2px;
+}
+
+/* Progress bar fill animation */
+.progressFill {
+  transition: width 0.5s ease-out;
+}
+
+/* Continue button styles */
+.continueBtn {
+  transition: all 0.2s ease;
+}
+
+.continueBtn:hover {
+  opacity: 0.9;
+}
+
+.continueBtn:active {
+  transform: scale(0.95);
+}
+
+/* Speech bubble tip */
+.speechBubbleTip {
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 16px;
+  height: 16px;
+  background-color: #2d2e2f;
+  border-right: 1px solid #424548;
+  border-bottom: 1px solid #424548;
+}
+
+/* Mascot animation */
+@keyframes mascotBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.animateMascot {
+  animation: mascotBounce 2s ease-in-out infinite;
+}
+
+/* Brand colors */
+.brandBg {
+  background-color: #1a1b1e;
+}
+
+.surfaceBg {
+  background-color: #2d2e2f;
+}
+
+.borderColor {
+  border-color: #424548;
+}
+
+.accentColor {
+  color: #2087B3;
+}
+
+.accentBg {
+  background-color: #2087B3;
+}
+
+.accentMutedBg {
+  background-color: #0E4A66;
+}
+
+/* Text colors */
+.textMuted {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.textPrimary {
+  color: rgba(255, 255, 255, 0.87);
+}
+
+/* Card hover effect */
+.cardHover:hover {
+  background-color: rgba(45, 46, 47, 0.5);
+}

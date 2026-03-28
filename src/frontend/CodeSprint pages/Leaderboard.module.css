@@ -1,0 +1,86 @@
+/* Leaderboard Page Custom Styles */
+
+/* Hex clip for special shapes */
+.hexClip {
+  clip-path: polygon(10% 0%, 90% 0%, 100% 50%, 90% 100%, 10% 100%, 0% 50%);
+}
+
+/* Glass panel effect */
+.glassPanel {
+  background: rgba(41, 42, 45, 0.4);
+  backdrop-filter: blur(12px);
+}
+
+/* Custom scrollbar */
+.customScrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.customScrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.customScrollbar::-webkit-scrollbar-thumb {
+  background: #3f484e;
+  border-radius: 10px;
+}
+
+.customScrollbar::-webkit-scrollbar-thumb:hover {
+  background: #2087B3;
+}
+
+/* Filter button active state */
+.filterBtnActive {
+  background-color: #2087B3;
+  color: white;
+}
+
+/* Sidebar active state */
+.sidebarActive {
+  background-color: #0E4A66;
+  color: #7bd0ff !important;
+  border-right: 3px solid #2087B3;
+  font-weight: 700;
+}
+
+/* Animations */
+@keyframes flamePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.animateFlamePulse {
+  animation: flamePulse 1.5s infinite;
+}
+
+/* Gold/Silver/Bronze specific styles */
+.rankGold {
+  border-color: #FFD700;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+}
+
+.rankSilver {
+  border-color: #C0C0C0;
+  box-shadow: 0 0 15px rgba(192, 192, 192, 0.3);
+}
+
+.rankBronze {
+  border-color: #CD7F32;
+  box-shadow: 0 0 15px rgba(205, 127, 50, 0.3);
+}
+
+/* Rank badge backgrounds */
+.rankGoldBadge {
+  background: #FFD700;
+  color: #121316;
+}
+
+.rankSilverBadge {
+  background: #C0C0C0;
+  color: #121316;
+}
+
+.rankBronzeBadge {
+  background: #CD7F32;
+  color: #121316;
+}

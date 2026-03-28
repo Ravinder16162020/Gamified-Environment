@@ -1,0 +1,119 @@
+/* My Progress Custom Styles */
+
+/* Progress bar fill animation */
+.progressBarFill {
+  transition: width 1.5s ease-in-out;
+}
+
+/* Heatmap cell styling */
+.heatmapCell {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}
+
+/* Level step styling */
+.levelStep {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+/* Active nav styling */
+.activeNav {
+  background-color: rgba(78, 162, 78, 0.1);
+  color: #4EA24E;
+  border-right: 4px solid #4EA24E;
+}
+
+/* Chart container */
+.chartContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* Roadmap progress line */
+.roadmapProgress {
+  transition: width 1s ease-in-out;
+}
+
+/* Stats card hover effect */
+.statsCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+/* Table row hover */
+.tableRow:hover {
+  background-color: #F8FAFC;
+  transition: background-color 0.15s ease;
+}
+
+/* Mastery item progress bar */
+.masteryProgressBar {
+  transition: width 1s ease-in-out;
+}
+
+/* Badge animation */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.badgePulse {
+  animation: pulse 2s infinite;
+}
+
+/* Heatmap color classes */
+.heatmapEmpty {
+  background-color: #F1F5F9;
+}
+
+.heatmapLight {
+  background-color: #BBF7D0;
+}
+
+.heatmapMedium {
+  background-color: #4ADE80;
+}
+
+.heatmapDark {
+  background-color: #16A34A;
+}
+
+/* Level completed state */
+.levelCompleted {
+  background-color: #4EA24E;
+  color: white;
+  box-shadow: 0 4px 12px rgba(78, 162, 78, 0.3);
+}
+
+/* Level active state */
+.levelActive {
+  background-color: white;
+  border: 2px solid #4EA24E;
+  color: #4EA24E;
+  box-shadow: 0 0 0 4px rgba(78, 162, 78, 0.1);
+}
+
+/* Level locked state */
+.levelLocked {
+  background-color: #F1F5F9;
+  color: #94A3B8;
+}
+
+/* Smooth transitions */
+.transitionSmooth {
+  transition: all 0.3s ease;
+}

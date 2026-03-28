@@ -1,0 +1,27 @@
+/* JourneySidebar Custom Styles */
+
+/* Custom scrollbar */
+.customScrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.customScrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.customScrollbar::-webkit-scrollbar-thumb {
+  background: #3f484e;
+  border-radius: 10px;
+}
+
+.customScrollbar::-webkit-scrollbar-thumb:hover {
+  background: #7bd0ff;
+}
+
+/* Sidebar active state */
+.sidebarActive {
+  background-color: #0E4A66;
+  color: #2087B3 !important;
+  border-right: 3px solid #2087B3;
+  font-weight: 700;
+}

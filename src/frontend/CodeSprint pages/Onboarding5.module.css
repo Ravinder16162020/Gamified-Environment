@@ -1,0 +1,94 @@
+/* Onboarding5 Custom Styles */
+
+/* Slide in animation */
+@keyframes slideInRight {
+  from { 
+    transform: translateX(30px); 
+    opacity: 0; 
+  }
+  to { 
+    transform: translateX(0); 
+    opacity: 1; 
+  }
+}
+
+.animateSlideIn {
+  animation: slideInRight 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+/* Animation delays */
+.delay1 { animation-delay: 0.2s; }
+.delay2 { animation-delay: 0.4s; }
+.delay3 { animation-delay: 0.6s; }
+
+/* Glow effect for progress bar */
+.glowProgress,
+.glow-progress {
+  box-shadow: 0 0 10px rgba(32, 135, 179, 0.6);
+}
+
+/* Loading spinner */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loadingSpinner,
+.loading-spinner {
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top: 2px solid #fff;
+  width: 20px;
+  height: 20px;
+  animation: spin 0.8s linear infinite;
+}
+
+/* Continue button */
+.continueBtn {
+  transition: all 0.2s ease;
+}
+
+.continueBtn:hover {
+  background-color: #1b7399;
+}
+
+.continueBtn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.continueBtn:disabled {
+  opacity: 0.8;
+  cursor: not-allowed;
+}
+
+/* Feature card hover */
+.featureCard {
+  transition: all 0.2s ease;
+}
+
+.featureCard:hover {
+  border-color: #2087B3;
+}
+
+/* Summary card */
+.summaryCard {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+}
+
+/* Mascot shadow */
+.mascotShadow {
+  box-shadow: 0 10px 25px -5px rgba(14, 74, 102, 0.5);
+}
+
+/* Speech bubble tail */
+.speechBubbleTail {
+  position: absolute;
+  top: 0;
+  left: -8px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 10px 10px 0 0;
+  border-color: white transparent transparent transparent;
+}

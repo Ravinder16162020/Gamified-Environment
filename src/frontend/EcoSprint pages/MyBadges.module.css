@@ -1,0 +1,118 @@
+/* My Badges Custom Styles */
+
+/* Badge card hover effect */
+.badgeCard {
+  transition: all 0.2s ease;
+}
+
+.badgeCard:hover {
+  transform: translateY(-4px);
+}
+
+/* Rarity badge styles */
+.rarityCommon {
+  background-color: #F1F5F9;
+  color: #475569;
+  border-color: #E2E8F0;
+}
+
+.rarityRare {
+  background-color: #EFF6FF;
+  color: #2563EB;
+  border-color: #BFDBFE;
+}
+
+.rarityEpic {
+  background-color: #FAF5FF;
+  color: #9333EA;
+  border-color: #E9D5FF;
+}
+
+.rarityLegendary {
+  background-color: #FFFBEB;
+  color: #D97706;
+  border-color: #FDE68A;
+}
+
+/* Locked badge style */
+.lockedBadge {
+  filter: grayscale(100%);
+  opacity: 0.75;
+}
+
+/* Unlocked badge animation */
+@keyframes badgeUnlock {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.badgeUnlocked {
+  animation: badgeUnlock 0.5s ease-out;
+}
+
+/* Progress bar animation */
+.progressBar {
+  transition: width 0.5s ease-out;
+}
+
+/* Category button active state */
+.categoryActive {
+  background-color: #4EA24E;
+  color: white;
+}
+
+/* Modal animation */
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.modalAnimate {
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+/* Stats card hover */
+.statsCard {
+  transition: all 0.2s ease;
+}
+
+.statsCard:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Icon glow effect for unlocked badges */
+.iconGlow {
+  box-shadow: 0 0 20px rgba(78, 162, 78, 0.3);
+}
+
+/* Heatmap-style activity indicator */
+.activityIndicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+}
+
+/* Badge collection progress gradient */
+.progressGradient {
+  background: linear-gradient(90deg, #4EA24E 0%, #68C068 100%);
+}
+
+/* Smooth transitions */
+.transitionSmooth {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}

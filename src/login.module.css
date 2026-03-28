@@ -1,0 +1,219 @@
+.container {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Right Side - Login Form */
+.rightSide {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #F8F6F6;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+@media (min-width: 1024px) {
+  .rightSide {
+    width: 60%;
+    overflow: hidden;
+  }
+}
+
+.formContainer {
+  max-width: 24rem;
+  width: 100%;
+  background: white;
+  padding: 2rem 2.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.welcomeBack {
+  font-size: 1.75rem;
+  font-weight: bold;
+  color: #0EB074;
+  margin: 0 0 0.5rem 0;
+}
+
+.subtitle {
+  font-size: 0.85rem;
+  color: #6B7280;
+  margin: 0 0 1.5rem 0;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.inputWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.inputWrapper label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.4rem;
+}
+
+.inputWrapper input {
+  width: 100%;
+  padding: 0.65rem 0.875rem;
+  border: 1px solid #D1D5DB;
+  border-radius: 0.5rem;
+  outline: none;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+}
+
+.inputWrapper input:focus {
+  border-color: #10B981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.inputWrapper input::placeholder {
+  color: #9CA3AF;
+}
+
+/* Forgot Password */
+.forgotPasswordLink {
+  text-align: right;
+  margin-top: 0.25rem;
+}
+
+.forgotPassword {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #10B981;
+  text-decoration: none;
+}
+
+.forgotPassword:hover {
+  color: #065F46;
+  text-decoration: underline;
+}
+
+/* Login Button */
+.loginBtn {
+  width: 100%;
+  background: linear-gradient(to right, #065F46, #10B981);
+  color: white;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 0.95rem;
+  margin-top: 0.5rem;
+}
+
+.loginBtn:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Divider */
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 1.25rem 0;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.dividerText {
+  padding: 0 0.875rem;
+  color: #9CA3AF;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+/* Google Button */
+.googleBtn {
+  width: 100%;
+  background: white;
+  color: #374151;
+  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid #D1D5DB;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.googleBtn:hover {
+  background: #F9FAFB;
+  border-color: #9CA3AF;
+}
+
+.googleIcon {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+/* Sign Up Link */
+.signupText {
+  text-align: center;
+  margin-top: 1.25rem;
+}
+
+.signupText p {
+  font-size: 0.85rem;
+  color: #6B7280;
+  margin: 0;
+}
+
+.signupText a {
+  font-weight: 600;
+  color: #10B981;
+  text-decoration: none;
+}
+
+.signupText a:hover {
+  color: #065F46;
+  text-decoration: underline;
+}
+
+/* Terms */
+.terms {
+  text-align: center;
+  font-size: 0.7rem;
+  color: #9CA3AF;
+  margin-top: 1rem;
+  line-height: 1.5;
+}
+
+.terms a {
+  color: #10B981;
+  text-decoration: none;
+}
+
+.terms a:hover {
+  text-decoration: underline;
+}

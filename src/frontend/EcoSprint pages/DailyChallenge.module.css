@@ -1,0 +1,82 @@
+/* Animations */
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Animation classes */
+.animateSlideIn {
+  animation: slideIn 0.3s ease-out;
+}
+
+.animateFadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animateZoomIn {
+  animation: zoomIn 0.3s ease-out;
+}
+
+/* Hover lift effect */
+.hoverLift {
+  transition: transform 0.2s ease-out;
+}
+
+.hoverLift:hover {
+  transform: translateY(-4px);
+}
+
+/* Sidebar transition */
+.sidebarTransition {
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Option card styles */
+.optionCard {
+  transition: all 0.2s ease-out;
+}
+
+.optionCard:hover:not(:disabled) {
+  transform: translateY(-4px);
+}
+
+/* Confetti animation placeholder */
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-100%) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+/* Modal backdrop blur */
+.modalBackdrop {
+  backdrop-filter: blur(4px);
+}

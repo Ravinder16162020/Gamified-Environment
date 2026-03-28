@@ -1,0 +1,86 @@
+/* Content Scrollbar */
+main::-webkit-scrollbar,
+div::-webkit-scrollbar {
+  width: 4px;
+}
+
+main::-webkit-scrollbar-track,
+div::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+main:hover::-webkit-scrollbar-thumb,
+div:hover::-webkit-scrollbar-thumb {
+  background: #4EA24E;
+  border-radius: 10px;
+}
+
+/* Custom animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Focus styles */
+.focus\:ring-\[\#4EA24E\]:focus {
+  --tw-ring-color: #4EA24E;
+  box-shadow: 0 0 0 3px rgba(78, 162, 78, 0.2);
+}
+
+.focus\:border-\[\#4EA24E\]:focus {
+  border-color: #4EA24E;
+}
+
+/* Background colors */
+.bg-\[\#4EA24E\] {
+  background-color: #4EA24E;
+}
+
+.bg-\[\#F0F9F0\] {
+  background-color: #F0F9F0;
+}
+
+.bg-\[\#F8FAFC\] {
+  background-color: #F8FAFC;
+}
+
+.text-\[\#4EA24E\] {
+  color: #4EA24E;
+}
+
+.hover\:bg-green-700:hover {
+  background-color: #15803d;
+}
+
+/* Transition utilities */
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+}
+
+/* Line clamp utilities */
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Shrink utility */
+.shrink-0 {
+  flex-shrink: 0;
+}
+
+/* Disabled styles */
+.disabled\:opacity-50:disabled {
+  opacity: 0.5;
+}
+
+.disabled\:cursor-not-allowed:disabled {
+  cursor: not-allowed;
+}

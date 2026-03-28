@@ -1,0 +1,60 @@
+/* Animations */
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes bounceSubtle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Animation classes */
+.animateSlideUp {
+  animation: slideUp 0.5s ease-out forwards;
+}
+
+.animateBounceSubtle {
+  animation: bounceSubtle 2s infinite;
+}
+
+/* Score arc animation */
+.scoreArc {
+  stroke-dasharray: 283;
+  stroke-dashoffset: 283;
+  transition: stroke-dashoffset 1.5s ease-in-out;
+}
+
+/* Custom scrollbar */
+.customScrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.customScrollbar::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 10px;
+}
+
+/* Main content scrollbar */
+.mainContent::-webkit-scrollbar {
+  width: 4px;
+}
+
+.mainContent::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.mainContent:hover::-webkit-scrollbar-thumb {
+  background: #4EA24E;
+  border-radius: 10px;
+}

@@ -1,0 +1,27 @@
+.sidebar-active {
+  background-color: #F0F9F0;
+  color: #4EA24E;
+  border-right: 4px solid #4EA24E;
+  font-weight: 700;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 10px;
+}
+
+.logout-button {
+  background-color: #D23B42;
+}
+
+.bg-sprintPrimary {
+  background-color: #4EA24E;
+}
+
+.text-sprintPrimary {
+  color: #4EA24E;
+}

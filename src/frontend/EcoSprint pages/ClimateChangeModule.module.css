@@ -1,0 +1,68 @@
+/* Content Scrollbar */
+main::-webkit-scrollbar {
+  width: 4px;
+}
+
+main::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+main:hover::-webkit-scrollbar-thumb {
+  background: #4EA24E;
+  border-radius: 10px;
+}
+
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.bg-slate-50 {
+  background-color: #f8fafc;
+}
+
+.focus\:ring-\[\#4EA24E\]:focus {
+  --tw-ring-color: #4EA24E;
+  box-shadow: 0 0 0 3px rgba(78, 162, 78, 0.2);
+}
+
+.focus\:border-\[\#4EA24E\]:focus {
+  border-color: #4EA24E;
+}
+
+.bg-\[\#4EA24E\] {
+  background-color: #4EA24E;
+}
+
+.text-\[\#4EA24E\] {
+  color: #4EA24E;
+}
+
+.bg-\[\#F8FAFC\] {
+  background-color: #F8FAFC;
+}
+
+.bg-\[\#F0F9F0\] {
+  background-color: #F0F9F0;
+}
+
+.hover\:bg-green-700:hover {
+  background-color: #15803d;
+}
+
+.backdrop-blur-sm {
+  backdrop-filter: blur(4px);
+}
+
+.mix-blend-overlay {
+  mix-blend-mode: overlay;
+}

@@ -1,0 +1,443 @@
+.container {
+  background: radial-gradient(circle at center, #e8f5e9 0%, #c8e6c9 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Card */
+.card {
+  background-color: white;
+  border-radius: 2.5rem;
+  width: 100%;
+  max-width: 640px;
+  padding: 2rem 3rem;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Skip Button */
+.skipContainer {
+  position: absolute;
+  top: 2rem;
+  right: 2.5rem;
+}
+
+.skipBtn {
+  color: #9ca3af;
+  font-weight: 500;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.skipBtn:hover {
+  color: #4b5563;
+}
+
+.skipBtn span {
+  font-size: 1.125rem;
+}
+
+/* Mascot Area */
+.mascotArea {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.mascotCircle {
+  width: 10rem;
+  height: 10rem;
+  background-color: #f8fafc;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.mascotFace {
+  width: 5rem;
+  height: 5rem;
+  background-color: #4EA24E;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Floating Icons */
+.floatingIcon {
+  position: absolute;
+  font-size: 1.5rem;
+  animation: float 3s ease-in-out infinite;
+}
+
+.icon1 {
+  top: -1rem;
+  right: 0.5rem;
+  animation-delay: 0s;
+}
+
+.icon2 {
+  top: 2.5rem;
+  right: -1.5rem;
+  font-size: 1.25rem;
+  animation-delay: 0.5s;
+}
+
+.icon3 {
+  bottom: -0.5rem;
+  right: 3rem;
+  font-size: 1.25rem;
+  color: #fbbf24;
+  animation-delay: 1s;
+}
+
+.icon4 {
+  top: 3rem;
+  left: -2rem;
+  animation-delay: 1.5s;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-5px); }
+  100% { transform: translateY(0px); }
+}
+
+/* Badge Display (Step 4) */
+.badgeDisplay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.badgeCircle {
+  width: 12rem;
+  height: 12rem;
+  background-color: #fef9c3;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border: 4px solid #fef3c7;
+}
+
+.badgeEmoji {
+  font-size: 4rem;
+}
+
+.newBadge {
+  position: absolute;
+  bottom: -0.5rem;
+  right: -0.5rem;
+  background-color: #4EA24E;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.625rem;
+  font-weight: 900;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Header Content */
+.headerContent {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.25rem 1rem;
+  background-color: #5DAF5D;
+  color: white;
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border-radius: 9999px;
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-size: 1.875rem;
+  font-weight: 800;
+  color: #111827;
+  letter-spacing: -0.025em;
+  margin-bottom: 1rem;
+}
+
+.subtitle {
+  color: #6b7280;
+  font-size: 1rem;
+  line-height: 1.5;
+  max-width: 28rem;
+  margin: 0 auto;
+}
+
+/* Dynamic Body */
+.dynamicBody {
+  margin-top: 2.5rem;
+}
+
+/* Feature Pills (Step 1) */
+.featurePills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.pill {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #f8fafc;
+  border: 1px solid #f1f5f9;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.pillIcon {
+  color: #4EA24E;
+}
+
+/* Interest Grid (Step 2) */
+.interestGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+.interestTile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background-color: #f8fafc;
+  border: 1px solid #f1f5f9;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.interestTileActive {
+  background-color: white;
+  border: 2px solid #4EA24E;
+  color: #4EA24E;
+}
+
+.checkIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Tour List (Step 3) */
+.tourList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.tourCard {
+  border: 1px solid #f1f5f9;
+  border-radius: 1rem;
+  padding: 1rem;
+  background-color: #f8fafc;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tourCard:hover {
+  border-color: rgba(78, 162, 78, 0.3);
+}
+
+.tourCardActive {
+  border-color: rgba(78, 162, 78, 0.3);
+}
+
+.tourHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tourIconWrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.tourIcon {
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: white;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.tourTitle {
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.tourArrow {
+  color: #9ca3af;
+}
+
+.tourContent {
+  padding-top: 0.75rem;
+  font-size: 0.875rem;
+  color: #4b5563;
+  line-height: 1.5;
+}
+
+/* Points Card (Step 4) */
+.pointsCard {
+  background-color: rgba(78, 162, 78, 0.05);
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(78, 162, 78, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pointsContent {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.pointsEmoji {
+  font-size: 1.875rem;
+}
+
+.pointsLabel {
+  font-size: 0.625rem;
+  font-weight: 700;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.pointsValue {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #4EA24E;
+}
+
+.pointsCheck {
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: rgba(78, 162, 78, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #4EA24E;
+  font-weight: 700;
+}
+
+/* CTA Section */
+.ctaSection {
+  margin-top: 3rem;
+  text-align: center;
+}
+
+.nextBtn {
+  background-color: #4EA24E;
+  color: white;
+  font-weight: 700;
+  padding: 1rem 2.5rem;
+  border-radius: 1rem;
+  font-size: 1.125rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 14px 0 rgba(78, 162, 78, 0.39);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.nextBtn:hover {
+  opacity: 0.9;
+  transform: scale(1.02);
+}
+
+.nextBtn:active {
+  transform: scale(0.98);
+}
+
+.arrow {
+  margin-left: 0.25rem;
+}
+
+/* Pagination */
+.pagination {
+  margin-top: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.dots {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: #e5e7eb;
+  border-radius: 9999px;
+  transition: all 0.3s;
+}
+
+.dotActive {
+  width: 2rem;
+  background-color: #4EA24E;
+}
+
+.stepText {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.completeText {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #4EA24E;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}

@@ -2,7 +2,11 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import ProtectedRoute from './components/ProtectedRoute';
 import LandingPage from './landingpage';
 import LoginPage from './LoginPage';
+import SignUp1 from './SignUp1';
+import SignUp2 from './SignUp2';
+import SignUp3 from './SignUp3';
 import EcoDashboard from './frontend/EcoSprint pages/EcoDashboard';
+import EcosprintOnBoard from './frontend/EcoSprint pages/EcosprintOnBoard';
 import LearningModulemain from './frontend/EcoSprint pages/LearningModulemain';
 import ClimateChangeModule from './frontend/EcoSprint pages/ClimateChangeModule';
 import ClimateChangeLesson from './frontend/EcoSprint pages/ClimateChangeLesson';
@@ -38,6 +42,15 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignUp1 />} />
+        <Route path="/signup2" element={<SignUp2 />} />
+        <Route path="/signup3" element={<SignUp3 />} />
+        
+        <Route path="/ecosprint-onboarding" element={
+          <ProtectedRoute allowedRole="ecosprint">
+            <EcosprintOnBoard />
+          </ProtectedRoute>
+        } />
         
         {/* EcoSprint Routes - Only for ecosprint users */}
         <Route path="/dashboard" element={

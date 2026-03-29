@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useGoogleLogin } from '@react-oauth/google';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import styles from './login.module.css';
 import LoginSignupLeftSide from './components/LoginSignupLeftSide';
 
@@ -17,7 +17,7 @@ const LoginPage = () => {
     if (email === 'student@ecosprint.com' && password === 'sprint123') {
       localStorage.setItem('userRole', 'ecosprint');
       localStorage.setItem('userEmail', email);
-      navigate('/dashboard');
+      navigate('/ecosprint-onboarding');
     }
     // CodeSprint credentials: college@codesprint.com / code123
     else if (email === 'college@codesprint.com' && password === 'code123') {
@@ -108,7 +108,7 @@ const LoginPage = () => {
           <div className={styles.signupText}>
             <p>
               New to the race?{' '}
-              <a href="#">Create an account</a>
+              <Link to="/signup" className={styles.signupLink}>Create an account</Link>
             </p>
           </div>
 

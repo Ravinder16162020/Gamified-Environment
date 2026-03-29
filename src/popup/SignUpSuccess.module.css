@@ -1,0 +1,189 @@
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(4px);
+  padding: 1rem;
+}
+
+/* Confetti Container */
+.confettiContainer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.confetti {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+}
+
+.confettiGreen {
+  background-color: #4EA24E;
+  transform: rotate(45deg);
+}
+
+.confettiYellow {
+  background-color: #F59E0B;
+  transform: rotate(-12deg);
+}
+
+.confettiOrange {
+  background-color: #F97316;
+  transform: rotate(12deg);
+}
+
+.confettiBlue {
+  background-color: #60a5fa;
+  transform: rotate(-45deg);
+}
+
+/* Modal Card */
+.modalCard {
+  position: relative;
+  background-color: white;
+  width: 100%;
+  max-width: 400px;
+  border-radius: 1rem;
+  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  transform: scale(1);
+  transition: all 0.3s ease;
+  padding: 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Icon */
+.iconWrapper {
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.iconCircle {
+  width: 5rem;
+  height: 5rem;
+  background-color: rgba(78, 162, 78, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.checkIcon {
+  width: 3rem;
+  height: 3rem;
+  color: #4EA24E;
+}
+
+/* Content */
+.title {
+  color: #0f172a;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  margin-bottom: 0.5rem;
+}
+
+.description {
+  color: #64748b;
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+/* Chips */
+.chipsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.chipGreen {
+  padding: 0.25rem 0.75rem;
+  background-color: rgba(78, 162, 78, 0.1);
+  color: #4EA24E;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 0.75rem;
+}
+
+.chipAmber {
+  padding: 0.25rem 0.75rem;
+  background-color: #fef3c7;
+  color: #b45309;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.trophyIcon {
+  width: 14px;
+  height: 14px;
+}
+
+/* Button */
+.startButton {
+  position: relative;
+  width: 100%;
+  background-color: #4EA24E;
+  color: white;
+  font-weight: 700;
+  padding: 1rem 1.5rem;
+  border-radius: 0.75rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 10px 15px -3px rgba(78, 162, 78, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+}
+
+.startButton:hover {
+  background-color: #3d8b3d;
+}
+
+.startButton:active {
+  transform: scale(0.95);
+}
+
+.arrowIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  transition: transform 0.2s ease;
+}
+
+.startButton:hover .arrowIcon {
+  transform: translateX(4px);
+}
+
+/* Footer */
+.sessionId {
+  margin-top: 1.5rem;
+  font-size: 0.625rem;
+  color: #94a3b8;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}

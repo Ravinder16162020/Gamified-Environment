@@ -15,10 +15,14 @@ const LoginPage = () => {
     
     // EcoSprint credentials: student@ecosprint.com / sprint123
     if (email === 'student@ecosprint.com' && password === 'sprint123') {
+      localStorage.setItem('userRole', 'ecosprint');
+      localStorage.setItem('userEmail', email);
       navigate('/dashboard');
     }
     // CodeSprint credentials: college@codesprint.com / code123
     else if (email === 'college@codesprint.com' && password === 'code123') {
+      localStorage.setItem('userRole', 'codesprint');
+      localStorage.setItem('userEmail', email);
       navigate('/onboarding1');
     }
     else {

@@ -15,8 +15,8 @@ const JourneySidebar = () => {
     { to: '/journey', icon: Map, label: 'Journey', active: true },
     { to: '/practice', icon: Swords, label: 'Practice' },
     { to: '/goals', icon: Flag, label: 'Goals' },
-    { to: '/challenges', icon: Target, label: 'Challenges' },
-    { to: '/leaderboard', icon: Trophy, label: 'Leaderboard' },
+    { to: '/code/challenges', icon: Target, label: 'Challenges' },
+    { to: '/code/leaderboard', icon: Trophy, label: 'Leaderboard' },
   ];
 
   return (
@@ -62,7 +62,7 @@ const JourneySidebar = () => {
         {/* Sidebar Footer */}
         <div className="p-2 group-hover:p-4 border-t border-[#424548] shrink-0">
           <NavLink 
-            to="/profile"
+            to="/code/profile"
             className={({ isActive }) => {
               const baseClasses = 'flex items-center justify-center group-hover:justify-start gap-3 mb-4 cursor-pointer w-full h-12 px-0 group-hover:px-4 rounded-lg transition-colors';
               if (isActive) {

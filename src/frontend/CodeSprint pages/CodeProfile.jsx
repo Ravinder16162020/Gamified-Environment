@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import JourneySidebar from '../../components/Sidebar/JourneySidebar';
-import styles from './Profile.module.css';
+import styles from './CodeProfile.module.css';
 
 // SVG Icons
 const MapIcon = () => (

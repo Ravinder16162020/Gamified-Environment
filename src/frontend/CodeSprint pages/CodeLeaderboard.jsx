@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import JourneySidebar from '../../components/Sidebar/JourneySidebar';
-import styles from './Leaderboard.module.css';
+import styles from './CodeLeaderboard.module.css';
 
 // SVG Icons
 const FireIcon = () => (

@@ -78,6 +78,8 @@ const quizData = {
 
 const QuizPage = () => {
   const { moduleId } = useParams();
+  // eslint-disable-next-line no-unused-vars
+  const _moduleId = moduleId;
   
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState({});
@@ -108,7 +110,7 @@ const QuizPage = () => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);

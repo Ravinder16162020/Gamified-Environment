@@ -1,9 +1,7 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import styles from './StreakBrokenpopup.module.css';
 
 const StreakBrokenpopup = ({ onClose, previousStreak = 7 }) => {
-  const navigate = useNavigate();
 
   const handleStartNewStreak = () => {
     // Close popup and user can continue on dashboard

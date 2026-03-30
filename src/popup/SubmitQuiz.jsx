@@ -1,9 +1,7 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import styles from './SubmitQuiz.module.css';
 
 const SubmitQuiz = ({ onClose, onSubmitNow, moduleId, answeredCount, totalQuestions, flaggedCount }) => {
-  const navigate = useNavigate();
 
   const handleSubmitNow = () => {
     // Call the parent callback to show ModuleCompletepopup

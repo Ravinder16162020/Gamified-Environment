@@ -1,0 +1,267 @@
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  pointer-events: none;
+}
+
+.modalCard {
+  pointer-events: auto;
+  position: relative;
+  max-width: 400px;
+  width: 100%;
+  background: linear-gradient(135deg, #F59E0B 0%, #F97316 100%);
+  border-radius: 0.5rem;
+  padding: 2rem;
+  text-align: center;
+  color: white;
+  box-shadow: 0 24px 48px -12px rgba(245, 158, 11, 0.4);
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+/* Stars Container */
+.starsContainer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.star {
+  position: absolute;
+  color: white;
+  opacity: 0.4;
+  animation: radiate 2s ease-in-out infinite;
+}
+
+.star1 {
+  top: 10%;
+  left: 10%;
+  width: 1.25rem;
+  height: 1.25rem;
+  opacity: 0.4;
+  animation-delay: 0s;
+}
+
+.star2 {
+  top: 20%;
+  right: 10%;
+  width: 1rem;
+  height: 1rem;
+  opacity: 0.6;
+  animation-delay: 0.2s;
+}
+
+.star3 {
+  bottom: 30%;
+  left: 20%;
+  width: 1.5rem;
+  height: 1.5rem;
+  opacity: 0.3;
+  animation-delay: 0.4s;
+}
+
+.star4 {
+  top: 50%;
+  right: 5%;
+  width: 0.75rem;
+  height: 0.75rem;
+  opacity: 0.5;
+  animation-delay: 0.6s;
+}
+
+.star5 {
+  bottom: 20%;
+  right: 25%;
+  width: 1rem;
+  height: 1rem;
+  opacity: 0.4;
+  animation-delay: 0.8s;
+}
+
+.star6 {
+  top: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1.25rem;
+  height: 1.25rem;
+  opacity: 0.2;
+  animation-delay: 1s;
+}
+
+.star7 {
+  bottom: 50%;
+  left: 8%;
+  width: 0.75rem;
+  height: 0.75rem;
+  opacity: 0.6;
+  animation-delay: 1.2s;
+}
+
+.star8 {
+  top: 25%;
+  right: 33%;
+  width: 1rem;
+  height: 1rem;
+  opacity: 0.3;
+  animation-delay: 1.4s;
+}
+
+@keyframes radiate {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 0.8;
+  }
+}
+
+/* Modal Content */
+.modalContent {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Icon Wrapper */
+.iconWrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 6rem;
+  height: 6rem;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(4px);
+  margin: 0 auto 0.5rem;
+}
+
+.lightningIcon {
+  font-size: 3rem;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
+}
+
+/* Title */
+.title {
+  font-size: 1.875rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  margin: 0;
+}
+
+/* Level Display */
+.levelDisplay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.levelNumber {
+  font-size: 6rem;
+  font-weight: 900;
+  line-height: 1;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
+}
+
+.levelName {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-top: 0.5rem;
+  color: rgba(255, 255, 255, 0.9);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Progress Section */
+.progressSection {
+  padding-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.progressLabel {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.progressBar {
+  height: 1rem;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 9999px;
+  overflow: hidden;
+  padding: 4px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.progressFill {
+  height: 100%;
+  background-color: white;
+  border-radius: 9999px;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
+  transition: width 0.5s ease;
+}
+
+/* Continue Button */
+.continueButton {
+  width: 100%;
+  background-color: white;
+  color: #F59E0B;
+  font-weight: 900;
+  font-size: 1.125rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+  transition: all 0.2s;
+  margin-top: 2rem;
+}
+
+.continueButton:hover {
+  background-color: #f1f5f9;
+  transform: translateY(-2px);
+}
+
+.continueButton:active {
+  transform: scale(0.95);
+}
+
+/* Decorative Glows */
+.glowTop {
+  position: absolute;
+  top: -6rem;
+  left: -6rem;
+  width: 16rem;
+  height: 16rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  filter: blur(80px);
+}
+
+.glowBottom {
+  position: absolute;
+  bottom: -6rem;
+  right: -6rem;
+  width: 16rem;
+  height: 16rem;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  filter: blur(80px);
+}

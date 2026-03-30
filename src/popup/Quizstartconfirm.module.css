@@ -1,0 +1,214 @@
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(2px);
+}
+
+/* Modal Card */
+.modalCard {
+  background-color: white;
+  border-radius: 1rem;
+  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.5);
+  padding: 2rem;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  animation: fadeInZoom 0.3s ease-out;
+}
+
+@keyframes fadeInZoom {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Brand Glow */
+.brandGlow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(to right, #7bd0ff, #ffb59a, #ffb3b0);
+}
+
+/* Icon */
+.iconWrapper {
+  width: 4rem;
+  height: 4rem;
+  background-color: rgba(78, 162, 78, 0.1);
+  border-radius: 50%;
+  margin: 0 auto 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.editIcon {
+  width: 2rem;
+  height: 2rem;
+  color: #4EA24E;
+}
+
+/* Module Chip */
+.moduleChip {
+  background-color: rgba(78, 162, 78, 0.1);
+  color: #4EA24E;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  display: inline-block;
+}
+
+/* Title */
+.title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-top: 1rem;
+}
+
+/* Rules List */
+.rulesList {
+  text-align: left;
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.ruleItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.ruleIcon {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ruleIcon svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.ruleIconBlue {
+  background-color: #dbeafe;
+  color: #2563eb;
+}
+
+.ruleIconAmber {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+
+.ruleIconGreen {
+  background-color: #d1fae5;
+  color: #059467;
+}
+
+.ruleIconPurple {
+  background-color: #e9d5ff;
+  color: #7c3aed;
+}
+
+.ruleIconRed {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.ruleText {
+  color: #475569;
+  font-size: 0.875rem;
+  line-height: 1.25;
+  padding-top: 0.25rem;
+}
+
+/* Button Group */
+.buttonGroup {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Start Button */
+.startBtn {
+  background-color: #4EA24E;
+  color: white;
+  font-weight: 700;
+  padding: 0.875rem;
+  border-radius: 0.75rem;
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+  box-shadow: 0 10px 15px -3px rgba(78, 162, 78, 0.3);
+}
+
+.startBtn:hover {
+  background-color: #3d8b3d;
+}
+
+.startBtn:active {
+  transform: scale(0.95);
+}
+
+.arrowIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* Back Button */
+.backBtn {
+  background-color: #f1f5f9;
+  color: #475569;
+  font-weight: 600;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+}
+
+.backBtn:hover {
+  background-color: #e2e8f0;
+}
+
+.backBtn:active {
+  transform: scale(0.95);
+}
+
+.backArrowIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+}

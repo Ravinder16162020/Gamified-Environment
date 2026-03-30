@@ -1,0 +1,151 @@
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Modal Card */
+.modalCard {
+  background-color: white;
+  border-radius: 1rem;
+  padding: 2rem;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  transform: scale(1);
+  transition: all 0.3s ease;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Icon Wrapper */
+.iconWrapper {
+  background-color: #fee2e2;
+  border-radius: 50%;
+  width: 4rem;
+  height: 4rem;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logoutIcon {
+  width: 2rem;
+  height: 2rem;
+  color: #ef4444;
+}
+
+/* Title */
+.title {
+  font-weight: 800;
+  font-size: 1.25rem;
+  margin-top: 1rem;
+  color: #0f172a;
+}
+
+/* Subtitle */
+.subtitle {
+  color: #64748b;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+/* Streak Box */
+.streakBox {
+  background-color: #fff7ed;
+  border: 1px solid #fdba74;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-align: left;
+}
+
+.flameIconWrapper {
+  flex-shrink: 0;
+}
+
+.flameIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #f97316;
+}
+
+.streakText {
+  color: #c2410c;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* Button Group */
+.buttonGroup {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Logout Button */
+.logoutBtn {
+  background-color: #ef4444;
+  color: white;
+  font-weight: 700;
+  padding: 0.875rem;
+  border-radius: 0.75rem;
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  outline: none;
+}
+
+.logoutBtn:hover {
+  background-color: #dc2626;
+}
+
+.logoutBtn:focus {
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2);
+}
+
+/* Cancel Button */
+.cancelBtn {
+  background-color: #f1f5f9;
+  color: #475569;
+  font-weight: 600;
+  padding: 0.875rem;
+  border-radius: 0.75rem;
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  outline: none;
+}
+
+.cancelBtn:hover {
+  background-color: #e2e8f0;
+}
+
+.cancelBtn:focus {
+  box-shadow: 0 0 0 4px rgba(226, 232, 240, 0.5);
+}

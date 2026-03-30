@@ -1,0 +1,368 @@
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(18, 19, 22, 0.8);
+  backdrop-filter: blur(4px);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+/* Modal Card */
+.modalCard {
+  background-color: white;
+  width: 100%;
+  max-width: 448px;
+  border-radius: 1rem;
+  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.3);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+}
+
+/* Close Button */
+.closeButton {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #94a3b8;
+  transition: color 0.2s;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.closeButton:hover {
+  color: #64748b;
+}
+
+.closeIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+/* Header */
+.header {
+  padding: 2rem 2rem 1rem;
+  text-align: center;
+}
+
+.titleWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.editIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: #4EA24E;
+}
+
+.title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  letter-spacing: -0.025em;
+  color: #1e293b;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.subtitle {
+  color: #475569;
+  font-size: 0.875rem;
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+}
+
+/* Scrollable Content */
+.content {
+  padding: 1rem 2rem;
+  max-height: 60vh;
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+/* Custom Scrollbar */
+.content::-webkit-scrollbar {
+  width: 4px;
+}
+
+.content::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.content::-webkit-scrollbar-thumb {
+  background: #4EA24E;
+  border-radius: 10px;
+}
+
+/* Avatar Section */
+.avatarSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.avatarWrapper {
+  position: relative;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.avatar {
+  width: 6rem;
+  height: 6rem;
+  background-color: #4EA24E;
+  color: white;
+  font-weight: 900;
+  font-size: 1.875rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(78, 162, 78, 0.25);
+  transition: transform 0.15s;
+}
+
+.avatarWrapper:active .avatar {
+  transform: scale(0.95);
+}
+
+.avatarOverlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.4);
+  border-radius: 50%;
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s;
+}
+
+.avatarWrapper:hover .avatarOverlay {
+  opacity: 1;
+}
+
+.cameraIcon {
+  width: 1.875rem;
+  height: 1.875rem;
+  color: white;
+}
+
+.uploadBtn {
+  margin-top: 0.75rem;
+  color: #4EA24E;
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: filter 0.2s;
+  font-family: 'Inter', sans-serif;
+}
+
+.uploadBtn:hover {
+  filter: brightness(0.9);
+}
+
+.uploadHint {
+  font-size: 0.625rem;
+  color: #94a3b8;
+  margin-top: 0.25rem;
+  font-family: 'Inter', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: -0.025em;
+}
+
+.fileInput {
+  display: none;
+}
+
+/* Form Fields */
+.formFields {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.fieldLabel {
+  display: block;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-left: 0.25rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.textInput {
+  width: 100%;
+  background-color: #f8fafc;
+  border: none;
+  box-shadow: inset 0 0 0 1px #e2e8f0;
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+  color: #1e293b;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+  outline: none;
+}
+
+.textInput::placeholder {
+  color: #94a3b8;
+}
+
+.textInput:focus {
+  box-shadow: inset 0 0 0 2px #4EA24E;
+}
+
+/* Textarea */
+.textareaWrapper {
+  position: relative;
+}
+
+.textarea {
+  width: 100%;
+  height: 7rem;
+  background-color: #f8fafc;
+  border: none;
+  box-shadow: inset 0 0 0 1px #e2e8f0;
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+  color: #1e293b;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  resize: none;
+  transition: all 0.2s;
+  outline: none;
+}
+
+.textarea::placeholder {
+  color: #94a3b8;
+}
+
+.textarea:focus {
+  box-shadow: inset 0 0 0 2px #4EA24E;
+}
+
+.charCount {
+  position: absolute;
+  bottom: 0.75rem;
+  right: 1rem;
+  font-size: 0.625rem;
+  font-family: monospace;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: -0.025em;
+}
+
+/* Interests */
+.interestsWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.interestChip {
+  background-color: #f1f5f9;
+  color: #475569;
+  font-weight: 700;
+  border-radius: 0.75rem;
+  padding: 0.375rem 1rem;
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Inter', sans-serif;
+}
+
+.interestChip:hover {
+  background-color: #e2e8f0;
+}
+
+.interestChipActive {
+  background-color: #4EA24E;
+  color: white;
+  box-shadow: 0 4px 8px rgba(78, 162, 78, 0.2);
+}
+
+/* Button Group */
+.buttonGroup {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 2rem 2rem;
+  background-color: white;
+  border-top: 1px solid #f1f5f9;
+}
+
+.cancelBtn {
+  flex: 1;
+  background-color: #f1f5f9;
+  color: #334155;
+  font-weight: 700;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Inter', sans-serif;
+}
+
+.cancelBtn:hover {
+  background-color: #e2e8f0;
+}
+
+.cancelBtn:active {
+  transform: scale(0.98);
+}
+
+.saveBtn {
+  flex: 1;
+  background-color: #4EA24E;
+  color: white;
+  font-weight: 700;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(78, 162, 78, 0.25);
+  transition: all 0.2s;
+  text-transform: uppercase;
+  letter-spacing: -0.025em;
+  font-family: 'Inter', sans-serif;
+}
+
+.saveBtn:hover {
+  box-shadow: 0 12px 24px rgba(78, 162, 78, 0.35);
+}
+
+.saveBtn:active {
+  transform: scale(0.98);
+}

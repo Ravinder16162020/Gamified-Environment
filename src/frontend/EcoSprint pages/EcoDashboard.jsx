@@ -1,11 +1,51 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowRight, Star, Flame, CheckCircle2, Timer, PlayCircle, Zap as ZapIcon, Map, History, Medal, ShieldCheck, Target, TrendingUp, Cpu, Microscope, Rocket } from 'lucide-react';
 import SidebarEcoDboard from '../../components/Sidebar/SidebarEcoDboard';
+import StreakBrokenpopup from '../../popup/StreakBrokenpopup';
 import styles from './EcoDashboard.module.css';
 
 const EcoDashboard = () => {
+  const [showStreakBrokenPopup, setShowStreakBrokenPopup] = useState(false);
+  const [previousStreak, setPreviousStreak] = useState(7);
+
+  // Check if streak is broken on component mount (login)
+  useEffect(() => {
+    // Get last login time from localStorage
+    const lastLoginTime = localStorage.getItem('lastLoginTime');
+    const savedStreak = localStorage.getItem('currentStreak');
+    const currentTime = new Date().getTime();
+    
+    // Convert saved streak to number, default to 7 if not found
+    const currentStreak = savedStreak ? parseInt(savedStreak, 10) : 7;
+    
+    if (lastLoginTime) {
+      const lastLogin = parseInt(lastLoginTime, 10);
+      const hoursSinceLastLogin = (currentTime - lastLogin) / (1000 * 60 * 60);
+      
+      // If more than 24 hours passed, streak is broken
+      if (hoursSinceLastLogin > 24) {
+        setPreviousStreak(currentStreak);
+        setShowStreakBrokenPopup(true);
+        // Reset streak to 0 in localStorage
+        localStorage.setItem('currentStreak', '0');
+      }
+    }
+    
+    // Update last login time
+    localStorage.setItem('lastLoginTime', currentTime.toString());
+  }, []);
+
+  const handleCloseStreakPopup = () => {
+    setShowStreakBrokenPopup(false);
+  };
   return (
-    <div className="h-screen bg-[#F8FAFC] font-sans text-[#0F172A] overflow-hidden">
+    <div className={`h-screen bg-[#F8FAFC] font-sans text-[#0F172A] overflow-hidden ${showStreakBrokenPopup ? 'opacity-40 grayscale-[0.5]' : ''}`}>
+      {showStreakBrokenPopup && (
+        <StreakBrokenpopup 
+          onClose={handleCloseStreakPopup}
+          previousStreak={previousStreak}
+        />
+      )}
       <SidebarEcoDboard />
       <main className="ml-20 h-full overflow-y-auto bg-[#F8FAFC] p-6">
           <div className="max-w-7xl mx-auto space-y-8">

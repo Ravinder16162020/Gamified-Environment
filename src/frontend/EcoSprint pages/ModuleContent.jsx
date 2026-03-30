@@ -6,6 +6,7 @@ import {
   BookOpen, Sword, Trophy, LineChart, Award, Bot as BotIcon, User
 } from 'lucide-react';
 import SidebarEcoDboard from '../../components/Sidebar/SidebarEcoDboard';
+import Quizstartconfirm from '../../popup/Quizstartconfirm';
 import styles from './ModuleContent.module.css';
 
 // Module data structure
@@ -59,6 +60,7 @@ const ModuleContent = () => {
   const [botInput, setBotInput] = useState('');
   const [messages, setMessages] = useState(botMessages);
   const [parallaxStyle, setParallaxStyle] = useState({});
+  const [showQuizConfirm, setShowQuizConfirm] = useState(false);
 
   // Determine which lesson to show based on entry mode
   useEffect(() => {
@@ -85,9 +87,9 @@ const ModuleContent = () => {
       alert('Complete previous modules to unlock this one');
       return;
     }
-    // If it's a quiz, navigate to the quiz page
+    // If it's a quiz, show confirmation popup instead of navigating directly
     if (lesson.isQuiz) {
-      navigate(`/modules/${moduleId}/quiz`);
+      setShowQuizConfirm(true);
       return;
     }
     setActiveLessonId(lessonId);
@@ -110,8 +112,8 @@ const ModuleContent = () => {
         return;
       }
       if (nextLesson.isQuiz) {
-        // Navigate to quiz page
-        navigate(`/modules/${moduleId}/quiz`);
+        // Show quiz confirmation popup instead of direct navigation
+        setShowQuizConfirm(true);
         return;
       }
       // Mark current lesson as completed and unlock next
@@ -129,13 +131,13 @@ const ModuleContent = () => {
     const nextLesson = lessons.find(l => l.id === activeLessonId + 1);
     
     if (nextLesson?.isQuiz) {
-      // Mark current complete and unlock quiz
+      // Mark current complete and show quiz confirmation popup
       setLessons(prev => prev.map(l => {
         if (l.id === currentLesson.id) return { ...l, completed: true };
         if (l.id === nextLesson.id) return { ...l, locked: false };
         return l;
       }));
-      navigate(`/modules/${moduleId}/quiz`);
+      setShowQuizConfirm(true);
     } else if (nextLesson) {
       // Mark current complete, unlock next, and move to it
       setLessons(prev => prev.map(l => {
@@ -187,8 +189,15 @@ const ModuleContent = () => {
   };
 
   return (
-    <div className="h-screen bg-[#F8FAFC] font-sans text-slate-800 overflow-hidden">
-      <SidebarEcoDboard />
+    <>
+      {showQuizConfirm && (
+        <Quizstartconfirm 
+          moduleId={moduleId} 
+          onClose={() => setShowQuizConfirm(false)} 
+        />
+      )}
+      <div className={`h-screen bg-[#F8FAFC] font-sans text-slate-800 overflow-hidden ${showQuizConfirm ? 'opacity-20' : ''}`}>
+        <SidebarEcoDboard />
       
       <div className="ml-20 flex flex-col h-full">
         {/* Top Navbar */}
@@ -511,6 +520,7 @@ const ModuleContent = () => {
         </footer>
       </div>
     </div>
+    </>
   );
 };
 

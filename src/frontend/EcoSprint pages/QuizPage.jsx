@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { 
-  Zap, FileText, ChevronLeft, ChevronRight, Flag, Grid, 
-  HelpCircle, LogOut, LayoutDashboard, BookOpen, Sword, 
-  Trophy, LineChart, Award, Bot, Clock
+  FileText, ChevronLeft, ChevronRight, Flag, Grid, 
+  HelpCircle
 } from 'lucide-react';
 import SidebarEcoDboard from '../../components/Sidebar/SidebarEcoDboard';
+import SubmitQuiz from '../../popup/SubmitQuiz';
+import ModuleCompletepopup from '../../popup/ModuleCompletepopup';
+import LevelUppopup from '../../popup/LevelUppopup';
+import QuizBadgeEarnedpopup from '../../popup/QuizBadgeEarnedpopup';
 import styles from './QuizPage.module.css';
 
 // Quiz data
@@ -74,18 +77,22 @@ const quizData = {
 };
 
 const QuizPage = () => {
-  const navigate = useNavigate();
   const { moduleId } = useParams();
   
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState({});
   const [flagged, setFlagged] = useState({});
   const [timeRemaining, setTimeRemaining] = useState(quizData.timeLimit);
-  const [attempt, setAttempt] = useState(1);
+  const [attempt] = useState(1);
+  const [showSubmitPopup, setShowSubmitPopup] = useState(false);
+  const [showModuleCompletePopup, setShowModuleCompletePopup] = useState(false);
+  const [showLevelUpPopup, setShowLevelUpPopup] = useState(false);
+  const [showBadgeEarnedPopup, setShowBadgeEarnedPopup] = useState(false);
 
-  const question = quizData.questions[currentQuestion];
-  const progress = ((currentQuestion + 1) / quizData.totalQuestions) * 100;
-  const answeredCount = Object.keys(answers).length;
+  const handleSubmitClick = () => {
+    // Show submit confirmation popup instead of direct navigation
+    setShowSubmitPopup(true);
+  };
 
   // Timer countdown
   useEffect(() => {
@@ -93,7 +100,7 @@ const QuizPage = () => {
       setTimeRemaining(prev => {
         if (prev <= 1) {
           clearInterval(timer);
-          handleSubmit();
+          handleSubmitClick();
           return 0;
         }
         return prev - 1;
@@ -139,50 +146,102 @@ const QuizPage = () => {
     setCurrentQuestion(index);
   };
 
-  const handleSubmit = () => {
-    // Navigate to quiz results page
-    navigate(`/modules/${moduleId}/quiz/result`);
+  const handleSubmitNow = () => {
+    // Close submit popup and show module complete popup
+    setShowSubmitPopup(false);
+    setShowModuleCompletePopup(true);
   };
 
-  const handleContinueLearning = () => {
-    navigate(`/modules/${moduleId}/learn?mode=continue`);
+  const handleModuleCompleteContinue = () => {
+    // Close module complete popup and show level up popup
+    setShowModuleCompletePopup(false);
+    setShowLevelUpPopup(true);
   };
 
-  const isAnswered = answers[question.id] !== undefined;
+  const handleLevelUpContinue = () => {
+    // Close level up popup and show badge earned popup
+    setShowLevelUpPopup(false);
+    setShowBadgeEarnedPopup(true);
+  };
+
+  const question = quizData.questions[currentQuestion];
+  const progress = ((currentQuestion + 1) / quizData.totalQuestions) * 100;
+  const answeredCount = Object.keys(answers).length;
+
   const isFlagged = flagged[question.id] || false;
+  const flaggedCount = Object.values(flagged).filter(Boolean).length;
 
   return (
-    <div className="h-screen bg-[#F8FAFC] font-sans text-slate-800 overflow-hidden">
-      <SidebarEcoDboard />
+    <>
+      {showSubmitPopup && (
+        <SubmitQuiz 
+          onClose={() => setShowSubmitPopup(false)}
+          onSubmitNow={handleSubmitNow}
+          moduleId={moduleId}
+          answeredCount={answeredCount}
+          totalQuestions={quizData.totalQuestions}
+          flaggedCount={flaggedCount}
+        />
+      )}
+      {showModuleCompletePopup && (
+        <ModuleCompletepopup 
+          onClose={() => setShowModuleCompletePopup(false)}
+          onContinue={handleModuleCompleteContinue}
+          moduleName={quizData.title}
+          score={80}
+          attempt={attempt}
+          ecoPoints={quizData.points}
+        />
+      )}
+      {showLevelUpPopup && (
+        <LevelUppopup 
+          onClose={() => setShowLevelUpPopup(false)}
+          onContinue={handleLevelUpContinue}
+          level={5}
+          levelName="Climate Guardian"
+          progress={100}
+        />
+      )}
+      {showBadgeEarnedPopup && (
+        <QuizBadgeEarnedpopup 
+          onClose={() => setShowBadgeEarnedPopup(false)}
+          badgeName="Pattern Pioneer"
+          badgeDescription="You've successfully identified complex environmental patterns in 5 consecutive modules."
+          earnedBadges={7}
+          totalBadges={20}
+        />
+      )}
+      <div className={`${styles.quizContainer} ${showSubmitPopup || showModuleCompletePopup || showLevelUpPopup || showBadgeEarnedPopup ? styles.dimmed : ''}`}>
+        <SidebarEcoDboard />
       
-      <div className="ml-20 flex flex-col h-full overflow-y-auto">
+      <div className={styles.mainWrapper}>
         {/* Main Content Area */}
-        <main className="flex-1 p-6 md:p-8 relative">
+        <main className={styles.mainContent}>
           {/* Quiz Header Card */}
-          <div className="w-full mx-auto mb-8">
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-wrap items-center justify-between gap-4">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-[#4EA24E]/10 rounded-xl flex items-center justify-center text-[#4EA24E]">
-                  <FileText className="w-6 h-6" />
+          <div className={styles.headerCard}>
+            <div className={styles.headerCardInner}>
+              <div className={styles.headerLeft}>
+                <div className={styles.headerIcon}>
+                  <FileText />
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold text-slate-800">{quizData.title}</h1>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="px-2.5 py-0.5 bg-slate-100 text-slate-600 text-xs font-semibold rounded-full uppercase tracking-wider">
+                  <h1 className={styles.headerTitle}>{quizData.title}</h1>
+                  <div className={styles.headerMeta}>
+                    <span className={styles.attemptBadge}>
                       Attempt {attempt}
                     </span>
-                    <span className="text-slate-400 text-sm">•</span>
-                    <span className="text-[#4EA24E] font-bold text-sm">+{quizData.points} pts stake</span>
+                    <span className={styles.metaDivider}>•</span>
+                    <span className={styles.pointsStake}>+{quizData.points} pts stake</span>
                   </div>
                 </div>
               </div>
-              <div className="flex flex-col items-end gap-2">
-                <span className="text-sm font-medium text-slate-500">
-                  Question <span className="text-slate-800">{currentQuestion + 1}</span> of {quizData.totalQuestions}
+              <div className={styles.headerRight}>
+                <span className={styles.questionCounter}>
+                  Question <span className={styles.questionNumber}>{currentQuestion + 1}</span> of {quizData.totalQuestions}
                 </span>
-                <div className="w-48 h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                <div className={styles.progressBarContainer}>
                   <div 
-                    className="h-full bg-[#4EA24E] rounded-full transition-all duration-500" 
+                    className={styles.progressBar}
                     style={{ width: `${progress}%` }}
                   />
                 </div>
@@ -191,41 +250,35 @@ const QuizPage = () => {
           </div>
 
           {/* Two-Column Layout */}
-          <div className="w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div className={styles.contentGrid}>
             {/* Question Card (Left) */}
-            <section className="lg:col-span-8 space-y-6">
-              <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-100">
-                <div className="flex justify-between items-start mb-6">
-                  <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">
+            <section className={styles.leftColumn}>
+              <div className={styles.questionCard}>
+                <div className={styles.questionHeader}>
+                  <span className={styles.questionNumberLabel}>
                     Question {String(currentQuestion + 1).padStart(2, '0')}
                   </span>
                   <button 
                     onClick={handleFlagToggle}
-                    className={`flex items-center gap-2 text-sm transition-colors ${
-                      isFlagged ? 'text-amber-600' : 'text-slate-500 hover:text-amber-600'
-                    }`}
+                    className={`${styles.flagButton} ${isFlagged ? styles.flagged : ''}`}
                   >
-                    <Flag className={`w-4 h-4 ${isFlagged ? 'fill-amber-600' : ''}`} />
+                    <Flag className={isFlagged ? styles.flagged : ''} />
                     <span>{isFlagged ? 'Flagged' : 'Flag for Review'}</span>
                   </button>
                 </div>
                 
-                <h2 className="text-lg md:text-xl font-semibold text-slate-800 leading-relaxed mb-8">
+                <h2 className={styles.questionText}>
                   {question.text}
                 </h2>
                 
-                <div className="space-y-4">
+                <div className={styles.optionsList}>
                   {question.options.map((option) => {
                     const isSelected = answers[question.id] === option.id;
                     return (
                       <label 
                         key={option.id}
                         onClick={() => handleOptionSelect(option.id)}
-                        className={`block cursor-pointer group transition-all duration-200 border-2 rounded-xl p-4 flex items-center gap-4 hover:shadow-md ${
-                          isSelected 
-                            ? 'border-[#4EA24E] bg-[#4EA24E] text-white shadow-md' 
-                            : 'border-slate-100 hover:border-[#4EA24E]/50 text-slate-700'
-                        }`}
+                        className={`${styles.optionLabel} ${isSelected ? styles.selected : ''}`}
                       >
                         <input 
                           type="radio" 
@@ -233,16 +286,12 @@ const QuizPage = () => {
                           value={option.id}
                           checked={isSelected}
                           onChange={() => handleOptionSelect(option.id)}
-                          className="hidden"
+                          className={styles.optionInput}
                         />
-                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold transition-colors ${
-                          isSelected 
-                            ? 'bg-white/20 text-white' 
-                            : 'border-2 border-slate-200 text-slate-500 group-hover:border-[#4EA24E]/50'
-                        }`}>
+                        <div className={`${styles.optionLetter} ${isSelected ? styles.selected : ''}`}>
                           {option.id}
                         </div>
-                        <span className={`font-medium ${isSelected ? 'text-white' : 'text-slate-700'}`}>
+                        <span className={`${styles.optionText} ${isSelected ? styles.selected : ''}`}>
                           {option.text}
                         </span>
                       </label>
@@ -252,35 +301,35 @@ const QuizPage = () => {
               </div>
 
               {/* Navigation Buttons */}
-              <div className="flex items-center justify-between">
+              <div className={styles.navigationButtons}>
                 <button 
                   onClick={handlePrevious}
                   disabled={currentQuestion === 0}
-                  className="flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 text-slate-600 font-semibold rounded-xl hover:bg-slate-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className={`${styles.navButton} ${styles.prevButton}`}
                 >
-                  <ChevronLeft className="w-5 h-5" />
+                  <ChevronLeft />
                   Previous
                 </button>
                 <button 
                   onClick={handleNext}
                   disabled={currentQuestion === quizData.totalQuestions - 1}
-                  className="flex items-center gap-2 px-8 py-3 bg-[#4EA24E] text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-[#4EA24E]/20 transform hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                  className={`${styles.navButton} ${styles.nextButton}`}
                 >
                   Next Question
-                  <ChevronRight className="w-5 h-5" />
+                  <ChevronRight />
                 </button>
               </div>
             </section>
 
             {/* Right Sidebar (Overview) */}
-            <aside className="lg:col-span-4 space-y-6">
-              <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
-                <h3 className="text-sm font-bold text-slate-800 mb-6 flex items-center gap-2">
-                  <Grid className="w-4 h-4 text-[#4EA24E]" />
+            <aside className={styles.rightColumn}>
+              <div className={styles.overviewCard}>
+                <h3 className={styles.overviewTitle}>
+                  <Grid />
                   QUESTION OVERVIEW
                 </h3>
                 
-                <div className="grid grid-cols-5 gap-3 mb-8">
+                <div className={styles.questionGrid}>
                   {quizData.questions.map((q, index) => {
                     const isAnswered = answers[q.id] !== undefined;
                     const isFlagged = flagged[q.id];
@@ -290,14 +339,10 @@ const QuizPage = () => {
                       <button
                         key={q.id}
                         onClick={() => handleQuestionJump(index)}
-                        className={`w-full aspect-square flex items-center justify-center rounded-lg font-bold text-sm transition-all ${
-                          isCurrent 
-                            ? 'bg-[#4EA24E] text-white shadow-sm ring-2 ring-[#4EA24E] ring-offset-2' 
-                            : isAnswered 
-                              ? 'bg-[#4EA24E]/20 text-[#4EA24E] border-2 border-[#4EA24E]' 
-                              : isFlagged 
-                                ? 'bg-amber-100 text-amber-600 border-2 border-amber-300' 
-                                : 'border-2 border-slate-100 text-slate-400 hover:border-slate-300'
+                        className={`${styles.questionNumberButton} ${
+                          isCurrent ? styles.current : ''
+                        } ${isAnswered ? styles.answered : ''} ${
+                          isFlagged ? styles.flagged : ''
                         }`}
                       >
                         {index + 1}
@@ -306,33 +351,31 @@ const QuizPage = () => {
                   })}
                 </div>
                 
-                <div className="space-y-3 pt-6 border-t border-slate-50">
-                  <div className="flex items-center justify-between text-xs font-medium text-slate-500">
+                <div className={styles.timerSection}>
+                  <div className={styles.timerLabel}>
                     <span>Time Remaining</span>
-                    <span className={`font-bold ${timeRemaining < 60 ? 'text-[#D23B42]' : 'text-[#D23B42]'}`}>
+                    <span className={styles.timerValue}>
                       {formatTime(timeRemaining)}
                     </span>
                   </div>
-                  <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                  <div className={styles.timerBar}>
                     <div 
-                      className="h-full bg-[#D23B42] rounded-full transition-all duration-1000"
+                      className={styles.timerProgress}
                       style={{ width: `${(timeRemaining / quizData.timeLimit) * 100}%` }}
                     />
                   </div>
                 </div>
                 
                 <button 
-                  onClick={handleSubmit}
+                  onClick={handleSubmitClick}
                   disabled={answeredCount < quizData.totalQuestions}
-                  className={`w-full mt-8 py-4 font-bold rounded-xl transition-all ${
-                    answeredCount < quizData.totalQuestions 
-                      ? 'bg-slate-100 text-slate-400 cursor-not-allowed' 
-                      : 'bg-[#4EA24E] text-white hover:shadow-lg hover:shadow-[#4EA24E]/20'
+                  className={`${styles.submitButton} ${
+                    answeredCount >= quizData.totalQuestions ? styles.enabled : ''
                   }`}
                 >
                   Submit Quiz
                 </button>
-                <p className="text-center text-[10px] text-slate-400 mt-3 italic">
+                <p className={styles.submitHint}>
                   {answeredCount < quizData.totalQuestions 
                     ? `Answer all questions to submit (${answeredCount}/${quizData.totalQuestions} answered)` 
                     : 'All questions answered - ready to submit'}
@@ -340,17 +383,17 @@ const QuizPage = () => {
               </div>
 
               {/* Help Card */}
-              <div className="bg-amber-50 rounded-2xl p-5 border border-amber-100">
-                <div className="flex items-start gap-4">
-                  <div className="bg-white p-2 rounded-lg text-amber-500">
-                    <HelpCircle className="w-5 h-5" />
+              <div className={styles.helpCard}>
+                <div className={styles.helpContent}>
+                  <div className={styles.helpIconWrapper}>
+                    <HelpCircle />
                   </div>
-                  <div>
-                    <p className="text-xs font-bold text-amber-800 uppercase tracking-wide">Need Help?</p>
-                    <p className="text-xs text-amber-700 mt-1 leading-relaxed">
+                  <div className={styles.helpText}>
+                    <p className={styles.helpTitle}>Need Help?</p>
+                    <p className={styles.helpDescription}>
                       Stuck on a question? Ask <b>EcoBot</b> for a hint! (Cost: 5 pts)
                     </p>
-                    <button className="mt-3 text-xs font-bold text-amber-600 hover:text-amber-800">
+                    <button className={styles.ecoBotLink}>
                       ASK ECOBOT →
                     </button>
                   </div>
@@ -361,6 +404,7 @@ const QuizPage = () => {
         </main>
       </div>
     </div>
+    </>
   );
 };
 

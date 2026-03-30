@@ -7,6 +7,8 @@ import {
   Check, X, Key, Sun as SunIcon, Moon, Monitor
 } from 'lucide-react';
 import SidebarEcoDboard from '../../components/Sidebar/SidebarEcoDboard';
+import EditProfilepopup from '../../popup/EditProfilepopup';
+import Logoutpopup from '../../popup/Logoutpopup';
 import styles from './Profile.module.css';
 
 // User data
@@ -383,38 +385,7 @@ const Profile = () => {
 
       {/* Edit Profile Modal */}
       {showEditModal && (
-        <div className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden">
-            <div className="p-6 border-b border-slate-100 flex items-center justify-between">
-              <h3 className="text-xl font-bold text-slate-900">Edit Profile</h3>
-              <button onClick={() => setShowEditModal(false)} className="p-2 hover:bg-slate-100 rounded-full text-slate-400">
-                <X className="w-6 h-6" />
-              </button>
-            </div>
-            <div className="p-6 space-y-4">
-              <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-500 uppercase">Full Name</label>
-                <input className="w-full rounded-xl border-slate-200 border p-2.5" type="text" defaultValue="Alex Rivera" />
-              </div>
-              <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-500 uppercase">Email Address</label>
-                <input className="w-full rounded-xl border-slate-200 border p-2.5" type="email" defaultValue="alex.r@greenview.edu" />
-              </div>
-              <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-500 uppercase">Bio</label>
-                <textarea className="w-full rounded-xl border-slate-200 border p-2.5" rows="3" defaultValue="Passionate about sustainable living and renewable energy."></textarea>
-              </div>
-              <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-500 uppercase">Interests (comma separated)</label>
-                <input className="w-full rounded-xl border-slate-200 border p-2.5" type="text" defaultValue="Solar Energy, Recycling, Policy" />
-              </div>
-            </div>
-            <div className="p-6 bg-slate-50 flex justify-end gap-3">
-              <button onClick={() => setShowEditModal(false)} className="px-6 py-2.5 font-bold text-slate-500 hover:text-slate-700">Cancel</button>
-              <button onClick={() => setShowEditModal(false)} className="px-6 py-2.5 bg-[#4EA24E] text-white font-bold rounded-xl shadow-lg shadow-[#4EA24E]/20">Save Changes</button>
-            </div>
-          </div>
-        </div>
+        <EditProfilepopup onClose={() => setShowEditModal(false)} />
       )}
 
       {/* Change Password Modal */}
@@ -456,29 +427,11 @@ const Profile = () => {
 
       {/* Logout Confirm Modal */}
       {showLogoutModal && (
-        <div className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl w-full max-w-sm shadow-2xl overflow-hidden text-center p-8">
-            <div className="w-20 h-20 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto mb-6">
-              <LogOut className="w-10 h-10" />
-            </div>
-            <h3 className="text-2xl font-bold text-slate-900 mb-2">Wait, {userData.name.split(' ')[0]}!</h3>
-            <p className="text-slate-500 mb-6 leading-relaxed">You have a <span className="text-amber-500 font-bold">5-day streak</span> going. If you leave now, you might forget your daily challenge!</p>
-            <div className="space-y-3">
-              <button 
-                onClick={handleLogout}
-                className="w-full py-3.5 bg-[#D23B42] text-white font-bold rounded-2xl shadow-lg shadow-rose-200 transition-all hover:-translate-y-1"
-              >
-                Yes, Log Me Out
-              </button>
-              <button 
-                onClick={() => setShowLogoutModal(false)}
-                className="w-full py-3.5 bg-slate-100 text-slate-600 font-bold rounded-2xl hover:bg-slate-200 transition-all"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
+        <Logoutpopup 
+          onClose={() => setShowLogoutModal(false)}
+          userName={userData.name}
+          streakDays={7}
+        />
       )}
     </div>
   );

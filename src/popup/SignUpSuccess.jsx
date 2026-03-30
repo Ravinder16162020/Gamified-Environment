@@ -1,10 +1,7 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import styles from './SignUpSuccess.module.css';
 
 const SignUpSuccess = ({ onClose }) => {
-  const navigate = useNavigate();
-
   const handleStartJourney = () => {
     onClose();
   };

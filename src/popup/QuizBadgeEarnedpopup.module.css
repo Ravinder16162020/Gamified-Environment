@@ -1,0 +1,273 @@
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  pointer-events: none;
+}
+
+.modalCard {
+  pointer-events: auto;
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.5);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* Confetti Container */
+.confettiContainer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.1;
+}
+
+.confetti {
+  position: absolute;
+}
+
+.confettiPrimary {
+  width: 1rem;
+  height: 1rem;
+  background-color: #7bd0ff;
+  transform: rotate(45deg);
+}
+
+.confettiSecondary {
+  width: 0.75rem;
+  height: 0.75rem;
+  background-color: #ffb59a;
+  border-radius: 50%;
+}
+
+.confettiTertiary {
+  width: 1rem;
+  height: 0.5rem;
+  background-color: #ffb3b0;
+}
+
+.confettiPrimaryContainer {
+  width: 0.5rem;
+  height: 1.25rem;
+  background-color: #3c9ac7;
+  border-radius: 9999px;
+}
+
+/* Icon Wrapper */
+.iconWrapper {
+  position: relative;
+  margin-bottom: 1.25rem;
+}
+
+.badgeIconContainer {
+  width: 6rem;
+  height: 6rem;
+  background-color: #fef3c7;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.4);
+  position: relative;
+  z-index: 10;
+}
+
+.badgeIcon {
+  width: 3rem;
+  height: 3rem;
+  color: #f59e0b;
+  stroke-width: 2;
+}
+
+/* Pulse Ring */
+.pulseRing {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background-color: rgba(251, 191, 36, 0.3);
+  transform: scale(1.25);
+  z-index: 0;
+  opacity: 0.5;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1.25);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.4);
+    opacity: 0.3;
+  }
+}
+
+/* Typography */
+.title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin: 0;
+  line-height: 1.25;
+}
+
+.badgeName {
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: #d97706;
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+  text-transform: uppercase;
+  letter-spacing: -0.025em;
+}
+
+.badgeType {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fef3c7;
+  color: #b45309;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.375rem 0.75rem;
+  border-radius: 9999px;
+  margin-top: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.description {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin-top: 0.75rem;
+  margin-bottom: 0;
+  line-height: 1.5;
+  max-width: 280px;
+}
+
+/* Progress Section */
+.progressSection {
+  width: 100%;
+  background-color: #f8fafc;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.progressLabel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+}
+
+.progressLabel span:first-child {
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.progressLabel span:last-child {
+  color: #1e293b;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: -0.025em;
+}
+
+.progressBar {
+  width: 100%;
+  height: 0.375rem;
+  background-color: #e2e8f0;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background-color: #fbbf24;
+  border-radius: 9999px;
+  box-shadow: 0 0 8px rgba(251, 191, 36, 0.4);
+  transition: width 0.5s ease;
+}
+
+/* Copy Link Button */
+.copyLinkButton {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #94a3b8;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  transition: color 0.2s;
+}
+
+.copyLinkButton:hover {
+  color: #64748b;
+}
+
+.copyIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* Continue Button */
+.continueButton {
+  width: 100%;
+  background-color: #f59e0b;
+  color: white;
+  font-weight: 900;
+  font-size: 0.875rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  border: none;
+  cursor: pointer;
+  margin-top: 1.5rem;
+  box-shadow: 0 10px 15px -3px rgba(245, 158, 11, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transition: all 0.2s;
+}
+
+.continueButton:hover {
+  background-color: #d97706;
+}
+
+.continueButton:active {
+  transform: scale(0.95);
+}
+
+/* View Gallery Button */
+.viewGalleryButton {
+  margin-top: 1rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.viewGalleryButton:hover {
+  color: #64748b;
+}

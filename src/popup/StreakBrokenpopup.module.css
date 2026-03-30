@@ -1,0 +1,207 @@
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(12px);
+  padding: 1rem;
+}
+
+/* Modal Container */
+.modalContainer {
+  background-color: white;
+  width: 100%;
+  max-width: 400px;
+  border-radius: 0.5rem;
+  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.5);
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Modal Content */
+.modalContent {
+  padding: 2rem;
+  text-align: center;
+  position: relative;
+  z-index: 10;
+}
+
+/* Icon Section */
+.iconSection {
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.iconWrapper {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  background-color: #fee2e2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brokenHeartIcon {
+  font-size: 2.25rem;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Title */
+.title {
+  font-size: 1.875rem;
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+}
+
+/* Subtitle */
+.subtitle {
+  color: #64748b;
+  margin-bottom: 2rem;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* Encouragement Box */
+.encouragementBox {
+  background-color: #f0fdf4;
+  border: 1px solid #dcfce7;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  text-align: left;
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.lightbulbIcon {
+  color: #15803d;
+  font-size: 1.25rem;
+  font-variation-settings: 'FILL' 1;
+}
+
+.encouragementText {
+  font-size: 0.875rem;
+  color: #14532d;
+  font-weight: 500;
+  line-height: 1.625;
+  margin: 0;
+}
+
+/* Streak Display */
+.streakDisplay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.streakColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.previousStreak {
+  color: #cbd5e1;
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-decoration: line-through;
+}
+
+.streakLabel {
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #94a3b8;
+  font-weight: 700;
+  margin-top: 0.25rem;
+}
+
+.arrowIcon {
+  color: #cbd5e1;
+}
+
+.currentStreak {
+  color: #ef4444;
+  font-size: 2.25rem;
+  font-weight: 900;
+}
+
+.resetLabel {
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #ef4444;
+  font-weight: 700;
+  margin-top: 0.25rem;
+}
+
+/* Button Group */
+.buttonGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Start Streak Button */
+.startStreakBtn {
+  width: 100%;
+  height: 3rem;
+  border-radius: 0.75rem;
+  background: linear-gradient(135deg, #4EA24E 0%, #3a7d3a 100%);
+  color: white;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  box-shadow: 0 10px 15px -3px rgba(78, 162, 78, 0.3);
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.startStreakBtn:hover {
+  transform: scale(1.02);
+}
+
+.startStreakBtn:active {
+  transform: scale(0.95);
+}
+
+/* Later Button */
+.laterBtn {
+  width: 100%;
+  height: 3rem;
+  border-radius: 0.75rem;
+  background-color: #f1f5f9;
+  color: #334155;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.laterBtn:hover {
+  background-color: #e2e8f0;
+}
+
+.laterBtn:active {
+  transform: scale(0.95);
+}

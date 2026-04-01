@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import JourneySidebar from '../../components/Sidebar/JourneySidebar';
+import StreakFreeze from '../../CodeSprintpopups/StreakFreeze';
 import styles from './Goals.module.css';
 
 // SVG Icons
@@ -474,30 +475,12 @@ const Goals = () => {
 
       {/* Streak Freeze Modal */}
       {showFreezeModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-[100] flex items-center justify-center p-4">
-          <div className="bg-[#252627] border border-[#424548] rounded-[2rem] p-10 max-w-sm w-full text-center">
-            <div className="animate-spin text-7xl mb-6 inline-block">❄️</div>
-            <h3 className="font-black text-white text-2xl mb-4 leading-tight">Engage Cryo-Shield?</h3>
-            <p className="text-[#bec8cf]/60 text-sm mb-6 leading-relaxed">
-              A streak freeze protects your 14-day record if you fail to complete goals tomorrow.
-            </p>
-            <div className="bg-[#1a1b1e] border border-[#424548] rounded-2xl px-5 py-4 flex justify-between items-center mb-8">
-              <span className="text-xs font-bold text-[#bec8cf] uppercase tracking-widest">Available:</span>
-              <span className="text-[#7bd0ff] font-black">1 FREE CHARGE</span>
-            </div>
-            <div className="space-y-3">
-              <button className="bg-[#0E4A66] border border-[#7bd0ff]/40 text-[#7bd0ff] hover:bg-[#7bd0ff] hover:text-[#121316] font-black py-4 w-full rounded-2xl transition-all uppercase tracking-widest text-xs">
-                Activate Freeze ❄️
-              </button>
-              <button 
-                onClick={() => setShowFreezeModal(false)}
-                className="bg-[#2d2e2f] border border-[#424548] text-[#bec8cf]/60 hover:text-white py-3.5 w-full rounded-2xl font-bold text-xs uppercase transition-all tracking-widest"
-              >
-                Abort Protocol
-              </button>
-            </div>
-          </div>
-        </div>
+        <StreakFreeze 
+          onClose={() => setShowFreezeModal(false)}
+          onActivate={() => setShowFreezeModal(false)}
+          streak={14}
+          availableFreezes={1}
+        />
       )}
     </div>
   );

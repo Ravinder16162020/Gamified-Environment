@@ -1,0 +1,159 @@
+/* StreakFreeze.module.css */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(2px);
+}
+
+.modal {
+  position: relative;
+  width: 22.5rem;
+  background: #1a1c1e;
+  border: 1px solid #2f3134;
+  border-radius: 2.5rem;
+  padding: 2.5rem;
+  text-align: center;
+  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(24px);
+}
+
+/* Icon Container */
+.iconContainer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.snowflake {
+  font-size: 3.75rem;
+  line-height: 1;
+  height: 4rem;
+  width: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #2087B3;
+  animation: spin 8s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Title */
+.title {
+  font-weight: 900;
+  font-size: 1.5rem;
+  color: white;
+  margin-bottom: 1rem;
+  letter-spacing: -0.025em;
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+/* Description */
+.description {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.streakHighlight {
+  color: #ffb59a;
+  font-weight: 600;
+}
+
+/* Cost Box */
+.costBox {
+  background: #121316;
+  border: 1px solid rgba(47, 49, 52, 0.5);
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.costLabel {
+  font-size: 0.6875rem;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.costValue {
+  color: #2087B3;
+  font-weight: 900;
+  font-size: 0.8125rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Action Buttons */
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.activateButton {
+  background: #2087B3;
+  color: white;
+  font-weight: 900;
+  padding: 1rem;
+  width: 100%;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  box-shadow: 0 4px 20px rgba(32, 135, 179, 0.3);
+  transition: all 0.2s;
+}
+
+.activateButton:hover {
+  filter: brightness(1.1);
+}
+
+.activateButton:active {
+  transform: scale(0.98);
+}
+
+.cancelButton {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 700;
+  padding: 0.75rem;
+  width: 100%;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+  letter-spacing: 0.025em;
+  transition: color 0.2s;
+}
+
+.cancelButton:hover {
+  color: white;
+}

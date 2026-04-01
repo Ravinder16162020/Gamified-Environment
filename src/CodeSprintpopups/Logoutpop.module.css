@@ -1,0 +1,191 @@
+/* Logoutpop.module.css */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  backdrop-filter: blur(8px);
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.modal {
+  background: #1a1b1e;
+  border: 1px solid rgba(63, 72, 78, 0.2);
+  border-radius: 1rem;
+  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.5);
+  max-width: 24rem;
+  width: 100%;
+  padding: 2rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle Surface Tint Overlay */
+.tintOverlay {
+  position: absolute;
+  inset: 0;
+  background: #7bd0ff;
+  opacity: 0.03;
+  pointer-events: none;
+}
+
+/* Top Icon Container */
+.iconContainer {
+  position: relative;
+  z-index: 10;
+  margin: 0 auto;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  background: rgba(61, 0, 0, 0.6);
+  border: 1px solid rgba(255, 179, 176, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffb3b0;
+}
+
+.headerIcon {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+/* Header Content */
+.header {
+  position: relative;
+  z-index: 10;
+  margin-top: 1.5rem;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  color: white;
+  font-family: 'Inter', sans-serif;
+}
+
+.subtitle {
+  color: #bec8cf;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  font-weight: 500;
+  opacity: 0.6;
+}
+
+/* Streak Warning Bento-style Box */
+.streakBox {
+  position: relative;
+  z-index: 10;
+  margin-top: 1.5rem;
+  background: rgba(61, 26, 0, 0.4);
+  border: 1px solid rgba(255, 181, 154, 0.2);
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  text-align: left;
+}
+
+.fireContainer {
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: rgba(244, 98, 33, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fireIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: #ffb59a;
+}
+
+.streakLabel {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #ffb59a;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+
+.streakText {
+  font-size: 0.6875rem;
+  line-height: 1.4;
+  color: rgba(255, 181, 154, 0.8);
+}
+
+/* Action Buttons */
+.actions {
+  position: relative;
+  z-index: 10;
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.logoutButton {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background: #fa585c;
+  color: #5b000d;
+  font-weight: 900;
+  border-radius: 0.75rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 20px rgba(250, 88, 92, 0.1);
+}
+
+.logoutButton:hover {
+  background: #ffb3b0;
+}
+
+.logoutButton:active {
+  transform: scale(0.98);
+}
+
+.cancelButton {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background: #292a2d;
+  border: 1px solid rgba(63, 72, 78, 0.3);
+  color: #bec8cf;
+  font-weight: 700;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancelButton:hover {
+  background: #38393c;
+}
+
+.cancelButton:active {
+  transform: scale(0.98);
+}
+
+/* Decorative Visual Soul (Light Glint) */
+.glint {
+  position: absolute;
+  top: -6rem;
+  left: -6rem;
+  width: 12rem;
+  height: 12rem;
+  background: rgba(123, 208, 255, 0.05);
+  filter: blur(80px);
+  border-radius: 50%;
+  pointer-events: none;
+}

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import JourneySidebar from '../../components/Sidebar/JourneySidebar';
+import EditProfilepopup from '../../CodeSprintpopups/EditProfilepopup';
+import Logoutpop from '../../CodeSprintpopups/Logoutpop';
 import styles from './CodeProfile.module.css';
 
 // SVG Icons
@@ -449,116 +451,19 @@ const Profile = () => {
         </div>
       </main>
 
-      {/* Edit Profile Modal */}
+      {/* Edit Profile Popup */}
       {showEditModal && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center px-4">
-          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setShowEditModal(false)}></div>
-          <div className="relative bg-[#292a2d] border border-[#3f484e]/20 rounded-2xl p-8 max-w-md w-full shadow-2xl animate-fade-in">
-            <button 
-              className="absolute top-4 right-4 text-[#bec8cf] hover:text-white transition-colors"
-              onClick={() => setShowEditModal(false)}
-            >
-              <CloseIcon />
-            </button>
-            <div className="flex items-center gap-3 mb-6">
-              <span className="text-[#7bd0ff] text-2xl"><EditIcon /></span>
-              <div>
-                <h2 className="font-bold text-xl text-white tracking-tight leading-none">Edit Profile</h2>
-                <p className="text-[#bec8cf] text-xs mt-1 font-medium">Customize your developer presence</p>
-              </div>
-            </div>
-            <div className="space-y-6">
-              <div className="flex items-center gap-6">
-                <div 
-                  className="relative group cursor-pointer"
-                  onClick={() => triggerToast('Opening file selector...')}
-                >
-                  <div className="w-20 h-20 rounded-full bg-[#004c69] border-2 border-[#3f484e]/30 flex items-center justify-center overflow-hidden">
-                    <span className="text-2xl font-black text-white">JS</span>
-                  </div>
-                  <div className="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all">
-                    <CameraIcon />
-                  </div>
-                </div>
-                <div>
-                  <button 
-                    onClick={() => triggerToast('Opening file selector...')}
-                    className="text-[#7bd0ff] text-sm font-bold hover:underline"
-                  >
-                    Upload Photo
-                  </button>
-                  <p className="text-[10px] text-[#bec8cf] font-bold uppercase tracking-wider mt-1">JPG or PNG • Max 2MB</p>
-                </div>
-              </div>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-[10px] uppercase font-black text-[#bec8cf] tracking-wider mb-2 ml-1">Full Name</label>
-                  <input 
-                    className="w-full bg-[#0d0e11] border border-[#3f484e]/20 rounded-xl px-4 py-3 text-sm text-white focus:ring-1 focus:ring-[#7bd0ff]/40 focus:border-[#7bd0ff]/40 outline-none transition-all" 
-                    type="text" 
-                    defaultValue="John Smith"
-                  />
-                </div>
-                <div>
-                  <div className="flex justify-between mb-2 px-1">
-                    <label className="text-[10px] uppercase font-black text-[#bec8cf] tracking-wider">Bio</label>
-                    <span className="text-[10px] text-[#bec8cf] font-bold">24/120</span>
-                  </div>
-                  <textarea 
-                    className="w-full h-24 bg-[#0d0e11] border border-[#3f484e]/20 rounded-xl px-4 py-3 text-sm text-white focus:ring-1 focus:ring-[#7bd0ff]/40 focus:border-[#7bd0ff]/40 outline-none transition-all resize-none" 
-                    placeholder="Tell us about your coding journey..."
-                    defaultValue="Full-stack student exploring the depths of Python and AI systems."
-                  ></textarea>
-                </div>
-              </div>
-              <div className="flex gap-3 pt-2">
-                <button 
-                  className="flex-1 bg-[#343538] border border-[#3f484e]/20 text-[#e3e2e6] font-bold py-3.5 rounded-xl hover:bg-[#38393c] transition-all"
-                  onClick={() => setShowEditModal(false)}
-                >
-                  Cancel
-                </button>
-                <button 
-                  className="flex-1 bg-[#7bd0ff] text-[#003549] font-bold py-3.5 rounded-xl hover:shadow-[0_0_20px_rgba(123,208,255,0.3)] transition-all"
-                  onClick={() => {
-                    setShowEditModal(false);
-                    triggerToast('Profile updated!');
-                  }}
-                >
-                  Save Changes
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <EditProfilepopup 
+          onClose={() => setShowEditModal(false)} 
+          onSave={(data) => {
+            triggerToast('Profile updated!');
+          }}
+        />
       )}
 
-      {/* Logout Confirmation Modal */}
+      {/* Logout Confirmation Popup */}
       {showLogoutModal && (
-        <div className="fixed inset-0 z-[70] flex items-center justify-center px-4">
-          <div className="absolute inset-0 bg-black/90 backdrop-blur-md"></div>
-          <div className="relative bg-[#292a2d] border border-[#ffb4ab]/20 rounded-3xl p-10 max-w-sm w-full text-center shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
-            <div className="w-20 h-20 rounded-2xl bg-[#ffb4ab]/10 flex items-center justify-center mx-auto mb-6">
-              <span className="text-4xl text-[#ffb4ab]"><LogOutIcon /></span>
-            </div>
-            <h2 className="text-2xl font-bold text-white mb-2">Logging out?</h2>
-            <p className="text-[#bec8cf] text-sm mb-8">You'll need to log back in to access your practice progress and rewards.</p>
-            <div className="flex flex-col gap-3">
-              <button 
-                onClick={handleLogout}
-                className="w-full bg-[#ffb4ab] text-[#690005] font-bold py-4 rounded-2xl hover:bg-red-400 transition-all"
-              >
-                Confirm Logout
-              </button>
-              <button 
-                onClick={() => setShowLogoutModal(false)}
-                className="w-full bg-[#343538] text-white font-bold py-4 rounded-2xl hover:bg-[#38393c] transition-all"
-              >
-                Stay Logged In
-              </button>
-            </div>
-          </div>
-        </div>
+        <Logoutpop onClose={() => setShowLogoutModal(false)} />
       )}
 
       {/* Success Toast */}

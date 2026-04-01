@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import JourneySidebar from '../../components/Sidebar/JourneySidebar';
+import PracticeProbSol from '../../CodeSprintpopups/PracticeProbSol';
+import PracticeHint from '../../CodeSprintpopups/PracticeHint';
+import AiPanelpopup from '../../CodeSprintpopups/AiPanelpopup';
 import styles from './Practice.module.css';
 
 // SVG Icons
@@ -472,86 +475,31 @@ const Practice = () => {
         </div>
       </div>
 
-      {/* Celebration Modal */}
+      {/* Problem Solved Popup */}
       {showCelebration && (
-        <div className="fixed inset-0 bg-black/80 z-[100] flex items-center justify-center backdrop-blur-md p-4">
-          <div className="bg-[#292a2d] max-w-lg w-full rounded-2xl p-10 shadow-2xl border border-[#3f484e]/20 text-center flex flex-col items-center animate-[scaleIn_0.3s_ease-out]">
-            <div className="w-24 h-24 bg-[#57dea0]/20 rounded-full flex items-center justify-center mb-6">
-              <CheckCircleIcon className="w-16 h-16 text-[#57dea0]" />
-            </div>
-            <h2 className="font-black text-4xl text-[#e3e2e6] mb-2">Problem Solved!</h2>
-            <p className="text-[#bec8cf] mb-8">You've successfully completed the challenge and earned 20 XP. Keep up the sprint!</p>
-            <div className="grid grid-cols-3 gap-4 w-full mb-8">
-              <div className="bg-[#0d0e11] p-4 rounded-xl border border-[#3f484e]/10">
-                <p className="text-[10px] text-[#899299] uppercase font-bold mb-1">XP EARNED</p>
-                <p className="text-xl font-bold text-[#2087B3]">+20</p>
-              </div>
-              <div className="bg-[#0d0e11] p-4 rounded-xl border border-[#3f484e]/10">
-                <p className="text-[10px] text-[#899299] uppercase font-bold mb-1">ACCURACY</p>
-                <p className="text-xl font-bold text-[#57dea0]">100%</p>
-              </div>
-              <div className="bg-[#0d0e11] p-4 rounded-xl border border-[#3f484e]/10">
-                <p className="text-[10px] text-[#899299] uppercase font-bold mb-1">STREAK</p>
-                <p className="text-xl font-bold text-[#c3c0ff]">5 Days</p>
-              </div>
-            </div>
-            <button 
-              onClick={continueToNext}
-              className="w-full bg-[#2087B3] text-white py-4 rounded-xl font-bold text-sm hover:bg-[#1a6b8e] transition-all"
-            >
-              CONTINUE TO NEXT CHALLENGE
-            </button>
-          </div>
-        </div>
+        <PracticeProbSol 
+          onClose={() => setShowCelebration(false)}
+          onContinue={continueToNext}
+          problemTitle={currentProblem.title}
+          difficulty={currentProblem.difficulty}
+          xp={40}
+          time="245s"
+        />
       )}
 
       {/* Hint Modal */}
       {showHint && (
-        <div className="fixed inset-0 bg-black/60 z-[60] flex items-center justify-center backdrop-blur-sm p-4">
-          <div className="bg-[#292a2d] max-w-md w-full rounded-xl p-6 shadow-2xl border border-[#3f484e]/20 animate-[scaleIn_0.3s_ease-out]">
-            <div className="flex items-center gap-3 mb-4">
-              <LightbulbIcon className="w-6 h-6 text-[#57dea0]" />
-              <h3 className="font-bold text-xl text-[#e3e2e6]">Strategy Hint</h3>
-            </div>
-            <p className="text-[#bec8cf] text-sm leading-relaxed mb-6">{currentProblem.hint}</p>
-            <button 
-              onClick={() => setShowHint(false)}
-              className="w-full bg-[#343538] text-[#e3e2e6] py-2 rounded font-bold text-sm hover:bg-[#292a2d] transition-colors"
-            >
-              GOT IT
-            </button>
-          </div>
-        </div>
+        <PracticeHint 
+          onClose={() => setShowHint(false)}
+          onConfirm={() => setShowHint(false)}
+          hint={currentProblem.hint}
+          cost={1}
+        />
       )}
 
       {/* AI Panel */}
       {showAIPanel && (
-        <div className="absolute top-16 right-0 h-[calc(100%-64px)] w-80 bg-[#292a2d] border-l border-[#3f484e]/20 z-50 flex flex-col shadow-2xl animate-[fadeIn_0.2s_ease-in]">
-          <div className="p-4 border-b border-[#3f484e]/10 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <AutoAwesomeIcon className="text-[#2087B3]" />
-              <span className="font-bold text-sm text-[#e3e2e6]">AI Assistant</span>
-            </div>
-            <button 
-              onClick={() => setShowAIPanel(false)}
-              className="text-[#899299] hover:text-[#e3e2e6]"
-            >
-              <CloseIcon />
-            </button>
-          </div>
-          <div className="flex-1 p-4 overflow-y-auto text-xs space-y-4 no-scrollbar">
-            <div className="bg-[#0d0e11] p-3 rounded-lg border border-[#3f484e]/10 text-[#bec8cf]">
-              How can I help you solve this? I can explain the logic or give you a push in the right direction.
-            </div>
-          </div>
-          <div className="p-4 bg-[#343538]/50">
-            <input 
-              className="w-full bg-[#0d0e11] border border-[#3f484e]/20 rounded px-3 py-2 text-xs text-[#e3e2e6] focus:ring-1 focus:ring-[#2087B3] outline-none"
-              placeholder="Ask a question..." 
-              type="text"
-            />
-          </div>
-        </div>
+        <AiPanelpopup onClose={() => setShowAIPanel(false)} />
       )}
     </div>
   );

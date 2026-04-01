@@ -1,0 +1,117 @@
+/* ========================================
+   CONTINUE CARD STYLES
+   Floating popup for active journey node
+   ======================================== */
+
+/* Card wrapper - positions the card above the node */
+.cardWrapper {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  animation: popupFloat 2s ease-in-out infinite;
+}
+
+/* Main popup card */
+.popupCard {
+  position: relative;
+  background-color: #1a2a3d;
+  border: 1px solid #2087B3;
+  border-radius: 1rem;
+  padding: 0.875rem 1.25rem;
+  min-width: 150px;
+  text-align: center;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* Card content container */
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+/* Node name text */
+.nodeName {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 1rem;
+  margin: 0;
+  line-height: 1.2;
+}
+
+/* CONTINUE button */
+.continueButton {
+  background-color: #2087B3;
+  color: #ffffff;
+  font-weight: 900;
+  font-size: 0.875rem;
+  padding: 0.625rem 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  text-transform: uppercase;
+  width: 100%;
+  margin-top: 0.625rem;
+  transition: all 0.2s ease;
+}
+
+.continueButton:hover {
+  background-color: #1a6d8f;
+  transform: scale(1.02);
+}
+
+.continueButton:active {
+  transform: scale(0.98);
+}
+
+/* Triangle pointer */
+.triangle {
+  position: absolute;
+  bottom: -9px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-top: 9px solid #2087B3;
+}
+
+/* Floating animation */
+@keyframes popupFloat {
+  0%, 100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-4px);
+  }
+}
+
+/* Pulse animation for active node indicator (optional) */
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(32, 135, 179, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(32, 135, 179, 0);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .popupCard {
+    min-width: 120px;
+    padding: 0.75rem 1rem;
+  }
+  
+  .nodeName {
+    font-size: 0.875rem;
+  }
+  
+  .continueButton {
+    font-size: 0.75rem;
+    padding: 0.5rem 0.75rem;
+  }
+}

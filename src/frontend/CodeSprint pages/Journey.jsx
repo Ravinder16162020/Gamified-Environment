@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import JourneySidebar from '../../components/Sidebar/JourneySidebar';
+import ContinueCard from '../../CodeSprintpopups/ContinueCard';
+import LockedTooltip from '../../CodeSprintpopups/LockedTooltip';
+import SectionCompletepopup from '../../CodeSprintpopups/SectionCompletepopup';
 import styles from './Journey.module.css';
 
 // Material Symbols icons as SVG components
@@ -60,6 +63,17 @@ const LightbulbIcon = () => (
 
 const Journey = () => {
   const navigate = useNavigate();
+  const [activeNode] = useState({
+    id: 'numbers',
+    name: 'Numbers',
+    type: 'lesson'
+  });
+  const [hoveredLockedNode, setHoveredLockedNode] = useState(null);
+  const [showSectionComplete, setShowSectionComplete] = useState(false);
+
+  const handleTrophyClick = () => {
+    setShowSectionComplete(true);
+  };
 
   const handleNumbersIconClick = () => {
     navigate('/codeeditor');
@@ -199,13 +213,16 @@ const Journey = () => {
                   </div>
 
                   {/* Trophy Node */}
-                  <div className="relative flex flex-col items-center mt-4">
+                  <div 
+                    className="relative flex flex-col items-center mt-4 cursor-pointer group"
+                    onClick={handleTrophyClick}
+                  >
                     <div className={`w-24 h-24 bg-yellow-500/10 ${styles.hexOutline} border border-yellow-500/50 flex items-center justify-center ${styles.hexagon}`}>
-                      <div className={`w-20 h-20 bg-yellow-500 ${styles.hexagon} flex items-center justify-center text-[#003549] shadow-[0_0_20px_rgba(234,179,8,0.3)]`}>
+                      <div className={`w-20 h-20 bg-yellow-500 ${styles.hexagon} flex items-center justify-center text-[#003549] shadow-[0_0_20px_rgba(234,179,8,0.3)] group-hover:scale-105 transition-transform`}>
                         <EmojiEventsIcon />
                       </div>
                     </div>
-                    <span className="mt-2 text-yellow-500 font-black text-xs uppercase">Introduction Mastery</span>
+                    <span className="mt-2 text-yellow-500 font-black text-xs uppercase group-hover:text-yellow-400 transition-colors">Introduction Mastery</span>
                   </div>
                 </div>
               </div>
@@ -232,8 +249,11 @@ const Journey = () => {
                     </div>
                   </div>
 
-                  {/* Numbers - Active Node */}
+                  {/* Numbers - Active Node with Continue Card */}
                   <div className="relative flex flex-col items-center -translate-x-12 group scale-110">
+                    {/* Continue Card Popup */}
+                    <ContinueCard node={activeNode} />
+                    
                     <div 
                       onClick={handleNumbersIconClick}
                       className={`w-20 h-20 bg-[#7bd0ff]/20 ${styles.hexOutline} flex items-center justify-center ${styles.hexagon} relative cursor-pointer`}
@@ -248,12 +268,16 @@ const Journey = () => {
                       className="absolute -right-32 top-1/2 -translate-y-1/2 text-left cursor-pointer"
                     >
                       <h4 className="font-black text-[#7bd0ff] text-base">Numbers</h4>
-                      <span className="text-[10px] font-bold text-[#7bd0ff]/70 uppercase">Continue Here</span>
                     </div>
                   </div>
 
                   {/* Strings - Locked */}
-                  <div className="relative flex flex-col items-center translate-x-12 opacity-40">
+                  <div 
+                    className="relative flex flex-col items-center translate-x-12 opacity-40 cursor-not-allowed"
+                    onMouseEnter={() => setHoveredLockedNode('strings')}
+                    onMouseLeave={() => setHoveredLockedNode(null)}
+                  >
+                    {hoveredLockedNode === 'strings' && <LockedTooltip />}
                     <div className={`w-20 h-20 bg-[#1f1f23] ${styles.hexOutline} border border-[#3f484e] flex items-center justify-center ${styles.hexagon}`}>
                       <div className={`w-16 h-16 bg-[#1a1b1e] ${styles.hexagon} flex items-center justify-center text-[#899299]`}>
                         <LockIcon />
@@ -265,26 +289,36 @@ const Journey = () => {
                   </div>
 
                   {/* Booleans - Locked */}
-                  <div className="relative flex flex-col items-center -translate-x-4 opacity-40">
+                  <div 
+                    className="relative flex flex-col items-center -translate-x-4 opacity-40 cursor-not-allowed"
+                    onMouseEnter={() => setHoveredLockedNode('conditions')}
+                    onMouseLeave={() => setHoveredLockedNode(null)}
+                  >
+                    {hoveredLockedNode === 'conditions' && <LockedTooltip />}
                     <div className={`w-20 h-20 bg-[#1f1f23] ${styles.hexOutline} border border-[#3f484e] flex items-center justify-center ${styles.hexagon}`}>
                       <div className={`w-16 h-16 bg-[#1a1b1e] ${styles.hexagon} flex items-center justify-center text-[#899299]`}>
                         <LockIcon />
                       </div>
                     </div>
                     <div className="absolute -right-28 top-1/2 -translate-y-1/2 text-left">
-                      <h4 className="font-bold text-sm">Booleans</h4>
+                      <h4 className="font-bold text-sm">Conditions</h4>
                     </div>
                   </div>
 
                   {/* Type Casting - Locked */}
-                  <div className="relative flex flex-col items-center translate-x-16 opacity-40">
+                  <div 
+                    className="relative flex flex-col items-center translate-x-16 opacity-40 cursor-not-allowed"
+                    onMouseEnter={() => setHoveredLockedNode('loops')}
+                    onMouseLeave={() => setHoveredLockedNode(null)}
+                  >
+                    {hoveredLockedNode === 'loops' && <LockedTooltip />}
                     <div className={`w-20 h-20 bg-[#1f1f23] ${styles.hexOutline} border border-[#3f484e] flex items-center justify-center ${styles.hexagon}`}>
                       <div className={`w-16 h-16 bg-[#1a1b1e] ${styles.hexagon} flex items-center justify-center text-[#899299]`}>
                         <LockIcon />
                       </div>
                     </div>
                     <div className="absolute -left-32 top-1/2 -translate-y-1/2 text-right">
-                      <h4 className="font-bold text-sm">Type Casting</h4>
+                      <h4 className="font-bold text-sm">Loops</h4>
                     </div>
                   </div>
                 </div>
@@ -391,6 +425,11 @@ const Journey = () => {
           </aside>
         </main>
       </div>
+
+      {/* Section Complete Popup */}
+      {showSectionComplete && (
+        <SectionCompletepopup onClose={() => setShowSectionComplete(false)} />
+      )}
     </div>
   );
 };

@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import JourneySidebar from '../../components/Sidebar/JourneySidebar';
+import AiPanelpopup from '../../CodeSprintpopups/AiPanelpopup';
+import CodeEditorHint from '../../CodeSprintpopups/CodeEditorHint';
 import styles from './CodeEditor.module.css';
 
 // Material Symbols icons as SVG components
@@ -482,61 +484,20 @@ print(gems_collected * bonus_multiplier)`);
               </button>
             </div>
 
-            {/* AI Slide-in Panel */}
-            <div 
-              className={`absolute right-0 top-0 bottom-0 w-80 bg-[#343538] border-l border-[#7bd0ff]/20 shadow-2xl z-40 flex flex-col transition-transform duration-300 ease-in-out ${
-                isAIPanelOpen ? 'translate-x-0' : 'translate-x-full'
-              }`}
-            >
-              <div className="p-4 border-b border-[#3f484e]/20 flex items-center justify-between">
-                <h3 className="text-sm font-bold uppercase tracking-widest flex items-center gap-2">
-                  <BoltIconSmall />
-                  AI Assistant
-                </h3>
-                <button 
-                  onClick={toggleAIPanel}
-                  className="text-[#bec8cf] hover:text-[#e3e2e6]"
-                >
-                  <CloseIcon />
-                </button>
-              </div>
-              <div className="flex-1 p-4 overflow-y-auto text-xs space-y-4 custom-scrollbar">
-                <div className="bg-[#7bd0ff]/5 p-3 rounded-lg border border-[#7bd0ff]/10">
-                  How can I help you with the multiplication challenge?
-                </div>
-              </div>
-              <div className="p-4 bg-[#1f1f23] border-t border-[#3f484e]/20">
-                <input 
-                  className="w-full bg-[#0d0e11] border border-[#3f484e]/30 rounded px-3 py-2 text-xs focus:outline-none focus:border-[#7bd0ff]/50" 
-                  placeholder="Type your question..." 
-                  type="text"
-                />
-              </div>
-            </div>
+            {/* AI Panel Popup */}
+            {isAIPanelOpen && (
+              <AiPanelpopup onClose={toggleAIPanel} />
+            )}
           </section>
         </main>
       </div>
 
       {/* Hint Modal */}
       {isHintModalOpen && (
-        <div className="fixed inset-0 bg-[#121316]/80 backdrop-blur-sm z-[110] flex items-center justify-center p-6">
-          <div className="max-w-sm w-full bg-[#1f1f23] rounded-2xl border border-[#3f484e]/30 p-8 shadow-2xl relative">
-            <h2 className="font-headline text-xl font-bold text-[#e3e2e6] mb-4 flex items-center gap-2">
-              <LightbulbIcon />
-              Need a hint?
-            </h2>
-            <p className="text-[#bec8cf] text-sm mb-6 leading-relaxed">
-              In Python, you can multiply two values using the asterisk (<code className="text-[#7bd0ff] font-bold">*</code>) symbol. 
-              For example: <code className="text-[#c3c0ff]">a * b</code>
-            </p>
-            <button 
-              onClick={() => setIsHintModalOpen(false)}
-              className="w-full py-3 bg-[#292a2d] text-[#e3e2e6] font-bold rounded-xl hover:bg-[#343538] transition-colors uppercase tracking-widest text-xs"
-            >
-              Got it
-            </button>
-          </div>
-        </div>
+        <CodeEditorHint 
+          onClose={() => setIsHintModalOpen(false)}
+          hint="In Python, you can multiply two values using the asterisk (*) symbol. For example: a * b"
+        />
       )}
 
       {/* Success Modal */}

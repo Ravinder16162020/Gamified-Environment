@@ -1,0 +1,152 @@
+/* PracticeHint.module.css */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(2px);
+}
+
+.modal {
+  position: relative;
+  width: 100%;
+  max-width: 24rem;
+  background: #1A1B1E;
+  border: 1px solid #424548;
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.8);
+  z-index: 10;
+}
+
+.closeButton {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: transparent;
+  border: none;
+  color: #899299;
+  cursor: pointer;
+  transition: color 0.2s;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.closeButton:hover {
+  color: white;
+}
+
+.closeIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.iconContainer {
+  width: 3.5rem;
+  height: 3.5rem;
+  background: #2D2800;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 2rem auto;
+}
+
+.icon {
+  width: 1.75rem;
+  height: 1.75rem;
+  color: #FFB800;
+}
+
+.content {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  letter-spacing: -0.025em;
+  margin-bottom: 0.75rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.description {
+  font-size: 0.9375rem;
+  color: #bec8cf;
+  line-height: 1.6;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.costSection {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: #FFB800;
+  font-weight: 700;
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+.gemIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.useHintButton {
+  width: 100%;
+  background: #2087B3;
+  color: white;
+  font-weight: 700;
+  padding: 0.875rem;
+  border-radius: 0.75rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 14px rgba(32, 135, 179, 0.2);
+}
+
+.useHintButton:hover {
+  filter: brightness(1.1);
+}
+
+.useHintButton:active {
+  transform: scale(0.98);
+}
+
+.cancelButton {
+  width: 100%;
+  background: transparent;
+  border: 1px solid rgba(137, 146, 153, 0.3);
+  color: #899299;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.cancelButton:hover {
+  color: white;
+  border-color: rgba(137, 146, 153, 0.6);
+}

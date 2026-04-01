@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import JourneySidebar from '../../components/Sidebar/JourneySidebar';
+import GoalChestReward from '../../CodeSprintpopups/GoalChestReward';
 import styles from './Challenges.module.css';
 
 // SVG Icons
@@ -566,40 +567,15 @@ const Challenges = () => {
         </div>
       </main>
 
-      {/* SUCCESS MODAL */}
+      {/* Goal Chest Reward Popup */}
       {showSuccessModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
-          <div className="absolute inset-0 bg-[#0D0E11]/90 backdrop-blur-md"></div>
-          <div className="relative w-full max-w-lg bg-[#1a1b1e] border border-[#3f484e]/20 rounded-[2.5rem] p-10 text-center shadow-2xl overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-[#E85A18] via-[#4EA24E] to-[#ffb3b0]"></div>
-            <div className="absolute inset-0 opacity-50" style={{background: 'radial-gradient(circle at center, rgba(78, 162, 78, 0.15) 0%, transparent 70%)'}}></div>
-            <div className="relative z-10 flex flex-col items-center">
-              <div className="w-24 h-24 bg-[#4EA24E]/20 rounded-full flex items-center justify-center mb-8 animate-bounce">
-                <PartyPopperIcon className="text-[#4EA24E]" />
-              </div>
-              <h2 className="text-4xl font-black tracking-tighter text-[#e3e2e6] mb-3 uppercase">Challenge Complete</h2>
-              <p className="text-[#bec8cf] text-lg mb-8 max-w-sm mx-auto">
-                Incredible performance, Alex! Your solution passed all test cases with 98% efficiency.
-              </p>
-              <div className="grid grid-cols-2 gap-4 w-full mb-10">
-                <div className="p-4 rounded-2xl bg-[#343538]/50 border border-[#3f484e]/10">
-                  <div className="text-[10px] font-black text-[#bec8cf] uppercase tracking-widest mb-1">XP Earned</div>
-                  <div className="text-2xl font-black text-[#E85A18]">+210 XP</div>
-                </div>
-                <div className="p-4 rounded-2xl bg-[#343538]/50 border border-[#3f484e]/10">
-                  <div className="text-[10px] font-black text-[#bec8cf] uppercase tracking-widest mb-1">Rank Boost</div>
-                  <div className="text-2xl font-black text-[#4EA24E]">↑ #12</div>
-                </div>
-              </div>
-              <button 
-                onClick={() => setShowSuccessModal(false)}
-                className="w-full py-4 rounded-2xl bg-[#4EA24E] text-white font-black uppercase tracking-[0.2em] shadow-lg shadow-[#4EA24E]/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
-              >
-                Continue Journey
-              </button>
-            </div>
-          </div>
-        </div>
+        <GoalChestReward 
+          onClose={() => setShowSuccessModal(false)}
+          xp={40}
+          gems={1}
+          goalsCompleted={2}
+          totalGoals={3}
+        />
       )}
     </div>
   );

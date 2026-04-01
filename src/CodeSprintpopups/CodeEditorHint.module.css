@@ -1,0 +1,143 @@
+/* CodeEditorHint.module.css */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+}
+
+.modal {
+  position: relative;
+  width: 100%;
+  max-width: 24rem;
+  background: #252627;
+  border: 1px solid #424548;
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.8);
+  animation: fadeInZoom 300ms ease-out forwards;
+}
+
+@keyframes fadeInZoom {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.closeButton {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: transparent;
+  border: none;
+  color: #899299;
+  cursor: pointer;
+  transition: color 0.2s;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.closeButton:hover {
+  color: white;
+}
+
+.closeIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.iconContainer {
+  width: 3.5rem;
+  height: 3.5rem;
+  background: #2d2800;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem auto;
+}
+
+.icon {
+  width: 1.75rem;
+  height: 1.75rem;
+  color: #FFB800;
+}
+
+.content {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  letter-spacing: -0.025em;
+  margin-bottom: 1rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.description {
+  font-size: 0.9375rem;
+  color: #bec8cf;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.warningBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #FFB800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: rgba(255, 184, 0, 0.1);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+}
+
+.warningIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.gotItButton {
+  width: 100%;
+  background: #2087B3;
+  color: white;
+  font-weight: 700;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 14px rgba(32, 135, 179, 0.2);
+}
+
+.gotItButton:hover {
+  background: #1a7094;
+}
+
+.gotItButton:active {
+  transform: scale(0.95);
+}

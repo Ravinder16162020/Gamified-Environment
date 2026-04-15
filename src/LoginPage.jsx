@@ -3,37 +3,79 @@ import { useGoogleLogin } from '@react-oauth/google';
 import { useNavigate, Link } from 'react-router-dom';
 import styles from './login.module.css';
 import LoginSignupLeftSide from './components/LoginSignupLeftSide';
+import { apiFetch } from './api';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Login submitted:', { email, password });
-    
-    // EcoSprint credentials: student@ecosprint.com / sprint123
-    if (email === 'student@ecosprint.com' && password === 'sprint123') {
-      localStorage.setItem('userRole', 'ecosprint');
-      localStorage.setItem('userEmail', email);
-      navigate('/ecosprint-onboarding');
-    }
-    // CodeSprint credentials: college@codesprint.com / code123
-    else if (email === 'college@codesprint.com' && password === 'code123') {
-      localStorage.setItem('userRole', 'codesprint');
-      localStorage.setItem('userEmail', email);
-      navigate('/onboarding1');
-    }
-    else {
-      alert('Invalid credentials. Try: student@ecosprint.com / sprint123 OR college@codesprint.com / code123');
+    setIsLoading(true);
+
+    try {
+      const response = await apiFetch('/api/login', {
+        method: 'POST',
+        body: JSON.stringify({
+          email: email.trim(),
+          password
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.message || 'Invalid credentials');
+        return;
+      }
+
+      localStorage.setItem('userRole', data.user.role);
+      localStorage.setItem('userEmail', data.user.email);
+      localStorage.setItem('username', data.user.username);
+      localStorage.setItem('xp', String(data.user.xp));
+      localStorage.setItem('level', String(data.user.level));
+
+      // Navigate to role selection page
+      navigate('/role-selection');
+    } catch (error) {
+      alert('Unable to connect to backend server');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleGoogleLogin = useGoogleLogin({
-    onSuccess: tokenResponse => {
-      console.log('Google login success:', tokenResponse);
-      navigate('/dashboard');
+    flow: 'implicit',
+    ux_mode: 'popup',
+    prompt: 'select_account',
+    scope: 'openid email profile',
+    onSuccess: async (tokenResponse) => {
+      try {
+        const response = await apiFetch('/api/auth/google', {
+          method: 'POST',
+          body: JSON.stringify({
+            accessToken: tokenResponse.access_token
+          })
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+          alert(data.message || 'Google login failed');
+          return;
+        }
+
+        localStorage.setItem('userRole', data.user.role);
+        localStorage.setItem('userEmail', data.user.email);
+        localStorage.setItem('username', data.user.username);
+        localStorage.setItem('xp', String(data.user.xp));
+        localStorage.setItem('level', String(data.user.level));
+
+        navigate('/role-selection');
+      } catch (error) {
+        alert('Unable to connect to backend server');
+      }
     },
     onError: () => console.log('Google login failed'),
   });
@@ -86,8 +128,8 @@ const LoginPage = () => {
               </a>
             </div>
 
-            <button type="submit" className={styles.loginBtn}>
-              Start Sprinting ⚡
+            <button type="submit" className={styles.loginBtn} disabled={isLoading}>
+              {isLoading ? 'Signing in...' : 'Start Sprinting ⚡'}
             </button>
           </form>
 

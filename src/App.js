@@ -1,50 +1,52 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute';
+import ErrorBoundary from './components/ErrorBoundary';
 import LandingPage from './landingpage';
 import LoginPage from './LoginPage';
 import SignUp1 from './SignUp1';
 import SignUp2 from './SignUp2';
-import SignUp3 from './SignUp3';
-import EcoDashboard from './frontend/EcoSprint pages/EcoDashboard';
-import EcosprintOnBoard from './frontend/EcoSprint pages/EcosprintOnBoard';
-import LearningModulemain from './frontend/EcoSprint pages/LearningModulemain';
-import ClimateChangeModule from './frontend/EcoSprint pages/ClimateChangeModule';
-import ClimateChangeLesson from './frontend/EcoSprint pages/ClimateChangeLesson';
-import ModuleContent from './frontend/EcoSprint pages/ModuleContent';
-import QuizPage from './frontend/EcoSprint pages/QuizPage';
-import QuizResult from './frontend/EcoSprint pages/QuizResult';
-import DailyChallenge from './frontend/EcoSprint pages/DailyChallenge';
-import EcoLeaderboard from './frontend/EcoSprint pages/Leaderboard';
-import EcoProfile from './frontend/EcoSprint pages/Profile';
-import Leaderboard from './frontend/CodeSprint pages/CodeLeaderboard';
-import MyProgress from './frontend/EcoSprint pages/MyProgress';
-import MyBadges from './frontend/EcoSprint pages/MyBadges';
-import Bages from './frontend/EcoSprint pages/Bages';
-import EcoBot from './frontend/EcoSprint pages/EcoBot';
-import Profile from './frontend/CodeSprint pages/CodeProfile';
-import Onboarding1 from './frontend/CodeSprint pages/Onboarding1';
-import Onboarding2 from './frontend/CodeSprint pages/Onboarding2';
-import Onboarding3 from './frontend/CodeSprint pages/Onboarding3';
-import Onboarding4 from './frontend/CodeSprint pages/Onboarding4';
-import Onboarding5 from './frontend/CodeSprint pages/Onboarding5';
-import Journey from './frontend/CodeSprint pages/Journey';
-import CodeEditor from './frontend/CodeSprint pages/CodeEditor';
-import JyQuizTheory from './frontend/CodeSprint pages/JyQuizTheory';
-import Practice from './frontend/CodeSprint pages/Practice';
-import Goals from './frontend/CodeSprint pages/Goals';
-import Challenges from './frontend/CodeSprint pages/Challenges';
+import RoleSelection from './RoleSelection';
+import EcoDashboard from './frontend/EcoSprint pages/EcoDashboard.jsx';
+import EcosprintOnBoard from './frontend/EcoSprint pages/EcosprintOnBoard.jsx';
+import LearningModulemain from './frontend/EcoSprint pages/LearningModulemain.jsx';
+import ClimateChangeModule from './frontend/EcoSprint pages/ClimateChangeModule.jsx';
+import ClimateChangeLesson from './frontend/EcoSprint pages/ClimateChangeLesson.jsx';
+import ModuleContent from './frontend/EcoSprint pages/ModuleContent.jsx';
+import QuizPage from './frontend/EcoSprint pages/QuizPage.jsx';
+import QuizResult from './frontend/EcoSprint pages/QuizResult.jsx';
+import DailyChallenge from './frontend/EcoSprint pages/DailyChallenge.jsx';
+import EcoLeaderboard from './frontend/EcoSprint pages/Leaderboard.jsx';
+import EcoProfile from './frontend/EcoSprint pages/Profile.jsx';
+import Leaderboard from './frontend/CodeSprint pages/CodeLeaderboard.jsx';
+import MyProgress from './frontend/EcoSprint pages/MyProgress.jsx';
+import MyBadges from './frontend/EcoSprint pages/MyBadges.jsx';
+import Bages from './frontend/EcoSprint pages/Bages.jsx';
+import EcoBot from './frontend/EcoSprint pages/EcoBot.jsx';
+import Profile from './frontend/CodeSprint pages/CodeProfile.jsx';
+import Onboarding1 from './frontend/CodeSprint pages/Onboarding1.jsx';
+import Onboarding2 from './frontend/CodeSprint pages/Onboarding2.jsx';
+import Onboarding3 from './frontend/CodeSprint pages/Onboarding3.jsx';
+import Onboarding4 from './frontend/CodeSprint pages/Onboarding4.jsx';
+import Onboarding5 from './frontend/CodeSprint pages/Onboarding5.jsx';
+import Journey from './frontend/CodeSprint pages/Journey.jsx';
+import CodeEditor from './frontend/CodeSprint pages/CodeEditor.jsx';
+import JyQuizTheory from './frontend/CodeSprint pages/JyQuizTheory.jsx';
+import Practice from './frontend/CodeSprint pages/Practice.jsx';
+import Goals from './frontend/CodeSprint pages/Goals.jsx';
+import Challenges from './frontend/CodeSprint pages/Challenges.jsx';
 
 function App() {
   const userRole = localStorage.getItem('userRole');
 
   return (
-    <Router>
-      <Routes>
+    <ErrorBoundary>
+      <Router>
+        <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUp1 />} />
         <Route path="/signup2" element={<SignUp2 />} />
-        <Route path="/signup3" element={<SignUp3 />} />
+        <Route path="/role-selection" element={<RoleSelection />} />
         
         <Route path="/ecosprint-onboarding" element={
           <ProtectedRoute allowedRole="ecosprint">
@@ -188,10 +190,15 @@ function App() {
           </ProtectedRoute>
         } />
         
-        {/* Catch all - redirect to login */}
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        {/* Catch all - redirect to home if not logged in, otherwise to login */}
+        <Route path="*" element={
+          localStorage.getItem('userRole') ? 
+            <Navigate to="/" replace /> :
+            <Navigate to="/" replace />
+        } />
       </Routes>
-    </Router>
+      </Router>
+    </ErrorBoundary>
   );
 }
 

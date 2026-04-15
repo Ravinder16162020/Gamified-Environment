@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
+import { useGoogleLogin } from '@react-oauth/google';
 import { useNavigate, Link } from 'react-router-dom';
 import styles from './SignUp1.module.css';
 import LoginSignupLeftSide from './components/LoginSignupLeftSide';
 import BackIcon from './assets/Backicon.svg';
+import { apiFetch } from './api';
 
 const SignUp1 = () => {
   const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -17,18 +20,70 @@ const SignUp1 = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Signup submitted:', formData);
-    // Store email for SignUp2
-    localStorage.setItem('signupEmail', formData.email);
-    // Navigate to step 2
-    navigate('/signup2');
+    if (formData.password !== formData.confirmPassword) {
+      alert('Passwords do not match');
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const response = await apiFetch('/api/signup/send-otp', {
+        method: 'POST',
+        body: JSON.stringify({ email: formData.email.trim() })
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        alert(data.message || 'Failed to send OTP');
+        return;
+      }
+
+      localStorage.setItem('signupData', JSON.stringify(formData));
+      navigate('/signup2');
+    } catch (error) {
+      alert('Unable to connect to backend server');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const handleGoogleSignup = () => {
-    console.log('Google signup clicked');
-  };
+  const handleGoogleSignup = useGoogleLogin({
+    flow: 'implicit',
+    ux_mode: 'popup',
+    prompt: 'select_account',
+    scope: 'openid email profile',
+    onSuccess: async (tokenResponse) => {
+      try {
+        const response = await apiFetch('/api/auth/google', {
+          method: 'POST',
+          body: JSON.stringify({
+            accessToken: tokenResponse.access_token
+          })
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+          alert(data.message || 'Google login failed');
+          return;
+        }
+
+        localStorage.setItem('userRole', data.user.role);
+        localStorage.setItem('userEmail', data.user.email);
+        localStorage.setItem('username', data.user.username);
+        localStorage.setItem('xp', String(data.user.xp));
+        localStorage.setItem('level', String(data.user.level));
+
+        navigate('/role-selection');
+      } catch (error) {
+        alert('Unable to connect to backend server');
+      }
+    },
+    onError: () => {
+      alert('Google login failed');
+    }
+  });
 
   return (
     <div className={styles.container}>
@@ -40,7 +95,7 @@ const SignUp1 = () => {
         <div className={styles.formContainer}>
           {/* Step & Back Header */}
           <div className={styles.header}>
-            <span className={styles.stepBadge}>Step 1 of 3</span>
+            <span className={styles.stepBadge}>Step 1 of 2</span>
             <button 
               className={styles.backBtn}
               onClick={() => navigate('/login')}
@@ -51,7 +106,7 @@ const SignUp1 = () => {
 
           {/* Progress Bar */}
           <div className={styles.progressBar}>
-            <div className={styles.progressFill} style={{ width: '33%' }}></div>
+            <div className={styles.progressFill} style={{ width: '50%' }}></div>
           </div>
 
           {/* Signup Form */}
@@ -112,8 +167,8 @@ const SignUp1 = () => {
               />
             </div>
 
-            <button type="submit" className={styles.nextBtn}>
-              <span>Next Step</span>
+            <button type="submit" className={styles.nextBtn} disabled={isSubmitting}>
+              <span>{isSubmitting ? 'Sending OTP...' : 'Next Step'}</span>
               <span className={styles.arrowIcon}>→</span>
             </button>
           </form>

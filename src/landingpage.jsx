@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './landingpage.module.css';
 import BadgesIcon from './assets/Bagesicon.svg';
+import SprintIcon from './assets/sprinticon.svg';
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -22,9 +23,9 @@ const LandingPage = () => {
           {/* Logo */}
           <div className={styles.logo} data-purpose="brand-logo">
             <div className={styles.logoIcon}>
-              <span className="material-icons-round">bolt</span>
+              <img className={styles.logoIconImage} src={SprintIcon} alt="EcoCode Sprint logo" />
             </div>
-            <span className={styles.logoText}>EcoSprint</span>
+            <span className={styles.logoText}>EcoCode Sprint</span>
           </div>
 
           {/* Desktop nav links */}

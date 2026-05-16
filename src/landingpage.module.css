@@ -81,6 +81,12 @@
 
 .logoIcon span { color: #fff; font-size: 1.875rem; }
 
+.logoIconImage {
+  width: 1.875rem;
+  height: 1.875rem;
+  display: block;
+}
+
 .logoText {
   font-weight: 700;
   font-size: 1.5rem;
@@ -180,7 +186,7 @@
   overflow: hidden;
 }
 @media (min-width: 1024px) {
-  .hero { padding-top: 12rem; padding-bottom: 10rem; }
+  .hero { padding-top: 8rem; padding-bottom: 4rem; }
 }
 
 .heroGlowRight {

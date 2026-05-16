@@ -1,75 +1,154 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  Leaf, LayoutDashboard, BookOpen, Award, Users, 
-  ChevronRight, Play, Zap, BookOpenCheck, HelpCircle, 
-  Flame, ZapOff, TrendingUp, Droplets, ThermometerSun, 
-  BatteryCharging, Gem, ShieldCheck, Calendar, Waves, 
-  Check, Lock, X, Share2
+import {
+  Award,
+  ChevronRight,
+  Play,
+  Zap,
+  BookOpenCheck,
+  HelpCircle,
+  Check,
+  Flame,
+  ZapOff,
+  TrendingUp,
+  Droplets,
+  ThermometerSun,
+  BatteryCharging,
+  Gem,
+  ShieldCheck,
+  Calendar,
+  Waves,
+  Lock,
+  X,
+  Share2,
+  Leaf
 } from 'lucide-react';
+import { getEcoBadges } from '../../api';
 import SidebarEcoDboard from '../../components/Sidebar/SidebarEcoDboard';
-import styles from './Bages.module.css';
 
-// User data
-const userData = {
-  name: "Alex Rivers",
-  avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuBNMfXpoOdvvFO2m6QcyEVB-irCxe43MnI5Fgcxvem6un9nE5LrPzkC6tC_cxDBGXKbmXyK9qC-tOpAv6xJjT7f1JLsPbkLS2jf03wvE_wQdJLxyZLfEUBRqcf-i62gNeXOUNbtaZiTeIwcHaIggLYVS29aVwWMu8csfo_gdGAbImLIE8EFSI8BkVKBoNy35EV9NO8uNywBUuQn1HcXBEqb5CdVz_WK82W2cRA0Q45mB4EKRnPijo_HWXALK_Xhgwye9kvjFH4C1A",
-  earnedCount: 7,
-  totalCount: 20,
-  completionPercentage: 35
+const BADGE_ICON_REGISTRY = {
+  play: Play,
+  zap: Zap,
+  bookOpenCheck: BookOpenCheck,
+  helpCircle: HelpCircle,
+  check: Check,
+  flame: Flame,
+  zapOff: ZapOff,
+  trendingUp: TrendingUp,
+  droplets: Droplets,
+  thermometerSun: ThermometerSun,
+  batteryCharging: BatteryCharging,
+  gem: Gem,
+  shieldCheck: ShieldCheck,
+  calendar: Calendar,
+  waves: Waves,
+  leaf: Leaf
 };
 
-// Badge categories for tabs
-const categories = [
-  { id: 'all', name: 'All' },
-  { id: 'Learning', name: 'Learning' },
-  { id: 'Quiz', name: 'Quiz' },
-  { id: 'Streak', name: 'Streak' },
-  { id: 'Topic', name: 'Topic' },
-  { id: 'Level', name: 'Level' },
-  { id: 'Daily', name: 'Daily' }
-];
-
-// Badges data
-const badges = [
-  { id: 1, name: "First Steps", category: "Learning", icon: Play, earned: true, color: "bg-blue-50 text-blue-600" },
-  { id: 2, name: "Quick Learner", category: "Learning", icon: Zap, earned: true, color: "bg-blue-50 text-blue-600" },
-  { id: 3, name: "Module Master", category: "Learning", icon: BookOpenCheck, earned: false, color: "bg-slate-100 text-slate-400" },
-  { id: 4, name: "Quiz Starter", category: "Quiz", icon: HelpCircle, earned: true, color: "bg-purple-50 text-purple-600" },
-  { id: 5, name: "Perfectionist", category: "Quiz", icon: Check, earned: false, color: "bg-slate-100 text-slate-400" },
-  { id: 6, name: "Green Streak 3", category: "Streak", icon: Flame, earned: true, color: "bg-orange-50 text-orange-600" },
-  { id: 7, name: "Green Streak 7", category: "Streak", icon: ZapOff, earned: true, color: "bg-orange-50 text-orange-600" },
-  { id: 8, name: "Green Streak 30", category: "Streak", icon: TrendingUp, earned: false, color: "bg-slate-100 text-slate-400" },
-  { id: 9, name: "Water Warrior", category: "Topic", icon: Droplets, earned: false, color: "bg-slate-100 text-slate-400" },
-  { id: 10, name: "Climate Aware", category: "Topic", icon: ThermometerSun, earned: false, color: "bg-slate-100 text-slate-400" },
-  { id: 11, name: "Energy Saver", category: "Topic", icon: BatteryCharging, earned: false, color: "bg-slate-100 text-slate-400" },
-  { id: 12, name: "Eco Champion", category: "Level", icon: Gem, earned: false, color: "bg-slate-100 text-slate-400" },
-  { id: 13, name: "Environmental Hero", category: "Level", icon: ShieldCheck, earned: false, color: "bg-slate-100 text-slate-400" },
-  { id: 14, name: "Daily Warrior", category: "Daily", icon: Calendar, earned: false, color: "bg-slate-100 text-slate-400" },
-  { id: 15, name: "Water Wise", category: "Topic", icon: Waves, earned: false, color: "bg-slate-100 text-slate-400" }
-];
-
-// Recently earned badges
-const recentBadges = [
-  { icon: Zap, color: "bg-orange-100 text-orange-600", title: "Green Streak 7" },
-  { icon: BookOpenCheck, color: "bg-blue-100 text-blue-600", title: "Quick Learner" },
-  { icon: HelpCircle, color: "bg-purple-100 text-purple-600", title: "Quiz Starter" }
-];
+const DEFAULT_BADGE_DATA = {
+  user: {
+    name: 'Learner',
+    avatarUrl: '',
+    school: 'Greenview High School',
+    className: '11-B',
+    earnedCount: 0,
+    totalCount: 0,
+    completionPercentage: 0,
+    points: 0,
+    levelLabel: 'Level 1',
+    streakLabel: '0 Day Streak'
+  },
+  badges: [],
+  categorySummary: [],
+  recentBadges: []
+};
 
 const Bages = () => {
   const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState('all');
   const [selectedBadge, setSelectedBadge] = useState(null);
   const [modalType, setModalType] = useState(null);
+  const [badgeData, setBadgeData] = useState(DEFAULT_BADGE_DATA);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
 
-  // Filter badges
-  const filteredBadges = activeCategory === 'all' 
-    ? badges 
-    : badges.filter(b => b.category === activeCategory);
+  const userEmail = localStorage.getItem('userEmail') || '';
 
-  const openModal = (badge, type) => {
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadBadges = async () => {
+      if (!userEmail) {
+        setErrorMessage('Please log in again to load your badges.');
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        setIsLoading(true);
+        setErrorMessage('');
+        const response = await getEcoBadges(userEmail);
+
+        if (cancelled) {
+          return;
+        }
+
+        setBadgeData({
+          ...DEFAULT_BADGE_DATA,
+          ...response,
+          user: {
+            ...DEFAULT_BADGE_DATA.user,
+            ...(response.user || {})
+          },
+          badges: Array.isArray(response.badges) ? response.badges : [],
+          categorySummary: Array.isArray(response.categorySummary) ? response.categorySummary : [],
+          recentBadges: Array.isArray(response.recentBadges) ? response.recentBadges : []
+        });
+      } catch (error) {
+        if (!cancelled) {
+          setErrorMessage(error.message || 'Failed to load badge collection.');
+        }
+      } finally {
+        if (!cancelled) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    loadBadges();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [userEmail]);
+
+  useEffect(() => {
+    if (activeCategory !== 'all' && !badgeData.categorySummary.some((category) => category.id === activeCategory)) {
+      setActiveCategory('all');
+    }
+  }, [activeCategory, badgeData.categorySummary]);
+
+  const categoryTabs = useMemo(() => {
+    return [
+      { id: 'all', name: 'All' },
+      ...badgeData.categorySummary.map((category) => ({
+        id: category.id,
+        name: category.name
+      }))
+    ];
+  }, [badgeData.categorySummary]);
+
+  const filteredBadges = useMemo(() => {
+    if (activeCategory === 'all') {
+      return badgeData.badges;
+    }
+
+    return badgeData.badges.filter((badge) => badge.category === activeCategory);
+  }, [activeCategory, badgeData.badges]);
+
+  const openModal = (badge) => {
     setSelectedBadge(badge);
-    setModalType(type);
+    setModalType(badge.earned ? 'earned' : 'locked');
   };
 
   const closeModal = () => {
@@ -77,144 +156,166 @@ const Bages = () => {
     setModalType(null);
   };
 
+  const getBadgeIcon = (iconKey) => BADGE_ICON_REGISTRY[iconKey] || Leaf;
+
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-sans text-slate-900">
       <SidebarEcoDboard />
-      
-      {/* Main Content */}
+
       <main className="ml-20 flex-1 overflow-y-auto p-8 transition-all duration-300">
-        {/* Header Section */}
         <header className="mb-8">
           <nav className="mb-2 flex items-center space-x-2 text-sm text-slate-500">
-            <button onClick={() => navigate('/dashboard')} className="hover:text-[#4EA24E] transition-colors">Dashboard</button>
+            <button onClick={() => navigate('/dashboard')} className="transition-colors hover:text-[#4EA24E]">
+              Dashboard
+            </button>
             <ChevronRight className="h-4 w-4" />
             <span className="font-medium text-[#4EA24E]">Badges</span>
           </nav>
-          <div className="flex items-end justify-between">
+          <div className="flex items-end justify-between gap-4">
             <div>
               <h1 className="text-3xl font-bold text-slate-900">Badges & Achievements</h1>
-              <p className="text-slate-600 mt-1">Track your progress and showcase your environmental impact.</p>
+              <p className="mt-1 text-slate-600">Track your progress and showcase your environmental impact.</p>
             </div>
-            <div className="flex items-center space-x-2 rounded-full bg-[#4EA24E]/10 px-4 py-2 text-sm font-semibold text-[#4EA24E] border border-[#4EA24E]/20 shadow-sm">
+            <div className="flex items-center space-x-2 rounded-full border border-[#4EA24E]/20 bg-[#4EA24E]/10 px-4 py-2 text-sm font-semibold text-[#4EA24E] shadow-sm">
               <Award className="h-4 w-4" />
-              <span>{userData.earnedCount} of {userData.totalCount} Badges Earned</span>
+              <span>{badgeData.user.earnedCount} of {badgeData.user.totalCount} Badges Earned</span>
             </div>
           </div>
         </header>
 
-        {/* Progress Banner */}
-        <section className="mb-8 overflow-hidden rounded-2xl bg-white border border-slate-200 shadow-sm">
+        <section className="mb-8 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
           <div className="grid grid-cols-1 lg:grid-cols-3">
-            {/* Left: Progress Bar */}
-            <div className="p-6 lg:col-span-2 border-r border-slate-100">
-              <div className="flex items-center justify-between mb-4">
+            <div className="border-r border-slate-100 p-6 lg:col-span-2">
+              <div className="mb-4 flex items-center justify-between">
                 <h2 className="text-lg font-semibold text-slate-800">Your Badge Collection</h2>
-                <span className="text-sm font-bold text-[#4EA24E]">{userData.completionPercentage}% Complete</span>
+                <span className="text-sm font-bold text-[#4EA24E]">{badgeData.user.completionPercentage}% Complete</span>
               </div>
-              <div className="h-3 w-full rounded-full bg-slate-100 mb-6">
-                <div 
+              <div className="mb-6 h-3 w-full rounded-full bg-slate-100">
+                <div
                   className="h-3 rounded-full bg-[#4EA24E] transition-all duration-1000"
-                  style={{ width: `${userData.completionPercentage}%` }}
-                ></div>
+                  style={{ width: `${badgeData.user.completionPercentage}%` }}
+                />
               </div>
               <div className="flex flex-wrap gap-3">
-                <span className="inline-flex items-center rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700 border border-blue-100">
-                  3 Learning
-                </span>
-                <span className="inline-flex items-center rounded-full bg-orange-50 px-3 py-1 text-xs font-medium text-orange-700 border border-orange-100">
-                  2 Streak
-                </span>
-                <span className="inline-flex items-center rounded-full bg-purple-50 px-3 py-1 text-xs font-medium text-purple-700 border border-purple-100">
-                  2 Quiz
-                </span>
+                {badgeData.categorySummary.map((category) => (
+                  <span
+                    key={category.id}
+                    className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium border ${
+                      category.id === 'Learning'
+                        ? 'bg-blue-50 text-blue-700 border-blue-100'
+                        : category.id === 'Quiz'
+                          ? 'bg-purple-50 text-purple-700 border-purple-100'
+                          : category.id === 'Streak'
+                            ? 'bg-orange-50 text-orange-700 border-orange-100'
+                            : category.id === 'Level'
+                              ? 'bg-slate-50 text-slate-700 border-slate-200'
+                              : 'bg-emerald-50 text-emerald-700 border-emerald-100'
+                    }`}
+                  >
+                    {category.earned} {category.name}
+                  </span>
+                ))}
               </div>
             </div>
-            {/* Right: Recently Earned */}
             <div className="bg-slate-50/50 p-6">
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-500 mb-4">Recently Earned</h3>
-              <div className="flex space-x-4">
-                {recentBadges.map((badge, index) => (
-                  <div 
-                    key={index}
-                    className={`flex h-12 w-12 items-center justify-center rounded-xl ${badge.color} shadow-sm`}
-                    title={badge.title}
-                  >
-                    <badge.icon className="h-6 w-6" />
-                  </div>
-                ))}
+              <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-slate-500">Recently Earned</h3>
+              <div className="flex flex-wrap gap-4">
+                {badgeData.recentBadges.length === 0 && (
+                  <p className="text-sm text-slate-500">Earn your first badge to see it here.</p>
+                )}
+                {badgeData.recentBadges.map((badge) => {
+                  const Icon = getBadgeIcon(badge.iconKey);
+                  return (
+                    <div
+                      key={badge.id}
+                      className={`flex h-12 w-12 items-center justify-center rounded-xl ${badge.color} shadow-sm`}
+                      title={badge.title}
+                    >
+                      <Icon className="h-6 w-6" />
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
         </section>
 
-        {/* Category Tabs */}
-        <nav className="mb-6 flex space-x-1 overflow-x-auto pb-1 scrollbar-hide">
-          {categories.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => setActiveCategory(cat.id)}
-              className={`whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
-                activeCategory === cat.id
-                  ? 'bg-[#4EA24E] text-white shadow-sm'
-                  : 'text-slate-600 hover:bg-white hover:shadow-sm'
-              }`}
-            >
-              {cat.name}
-            </button>
-          ))}
-        </nav>
+        {isLoading && (
+          <section className="mb-6 rounded-2xl border border-dashed border-slate-200 bg-white p-6 text-slate-600 shadow-sm">
+            Loading your live badge collection...
+          </section>
+        )}
 
-        {/* Badge Grid */}
-        <section className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-          {filteredBadges.map((badge) => (
-            <button
-              key={badge.id}
-              onClick={() => openModal(badge, badge.earned ? 'earned' : 'locked')}
-              className="group relative flex flex-col items-center rounded-2xl bg-white border border-slate-200 p-6 text-center hover:-translate-y-1 transition-transform cursor-pointer"
-            >
-              <div className={`mb-4 flex h-20 w-20 items-center justify-center rounded-full ${badge.color} ${!badge.earned && 'grayscale opacity-70'}`}>
-                <badge.icon className="h-10 w-10" />
-              </div>
-              
-              {/* Checkmark or Lock */}
-              <div className={`absolute top-4 right-4 ${badge.earned ? 'text-[#4EA24E]' : 'text-slate-400'}`}>
-                {badge.earned ? (
-                  <Check className="h-5 w-5" />
-                ) : (
-                  <Lock className="h-4 w-4" />
-                )}
-              </div>
-              
-              <h4 className={`text-sm font-bold ${badge.earned ? 'text-slate-800' : 'text-slate-400'}`}>{badge.name}</h4>
-              <p className="mt-1 text-xs text-slate-500">{badge.category}</p>
-            </button>
-          ))}
-        </section>
+        {!isLoading && errorMessage && (
+          <section className="mb-6 rounded-2xl border border-rose-200 bg-rose-50 p-6 text-rose-700 shadow-sm">
+            {errorMessage}
+          </section>
+        )}
+
+        {!isLoading && !errorMessage && (
+          <>
+            <nav className="mb-6 flex space-x-1 overflow-x-auto pb-1">
+              {categoryTabs.map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => setActiveCategory(cat.id)}
+                  className={`whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+                    activeCategory === cat.id
+                      ? 'bg-[#4EA24E] text-white shadow-sm'
+                      : 'text-slate-600 hover:bg-white hover:shadow-sm'
+                  }`}
+                >
+                  {cat.name}
+                </button>
+              ))}
+            </nav>
+
+            <section className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+              {filteredBadges.map((badge) => {
+                const Icon = getBadgeIcon(badge.iconKey);
+                return (
+                  <button
+                    key={badge.id}
+                    onClick={() => openModal(badge)}
+                    className="group relative flex flex-col items-center rounded-2xl border border-slate-200 bg-white p-6 text-center transition-transform hover:-translate-y-1"
+                  >
+                    <div className={`mb-4 flex h-20 w-20 items-center justify-center rounded-full ${badge.color} ${!badge.earned ? 'grayscale opacity-70' : ''}`}>
+                      <Icon className="h-10 w-10" />
+                    </div>
+
+                    <div className={`absolute right-4 top-4 ${badge.earned ? 'text-[#4EA24E]' : 'text-slate-400'}`}>
+                      {badge.earned ? <Check className="h-5 w-5" /> : <Lock className="h-4 w-4" />}
+                    </div>
+
+                    <h4 className={`text-sm font-bold ${badge.earned ? 'text-slate-800' : 'text-slate-400'}`}>
+                      {badge.name}
+                    </h4>
+                    <p className="mt-1 text-xs text-slate-500">{badge.category}</p>
+                  </button>
+                );
+              })}
+            </section>
+          </>
+        )}
       </main>
 
-      {/* Badge Modal */}
       {selectedBadge && modalType && (
-        <div 
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4"
-          onClick={closeModal}
-        >
-          <div 
-            className="relative w-full max-w-md rounded-2xl bg-white p-8 shadow-2xl transform transition-all scale-100"
-            onClick={(e) => e.stopPropagation()}
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-sm" onClick={closeModal}>
+          <div
+            className="relative w-full max-w-md transform rounded-2xl bg-white p-8 shadow-2xl transition-all scale-100"
+            onClick={(event) => event.stopPropagation()}
           >
-            {/* Close Button */}
-            <button 
+            <button
               onClick={closeModal}
-              className="absolute top-4 right-4 rounded-full p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
+              className="absolute right-4 top-4 rounded-full p-2 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
             >
               <X className="h-6 w-6" />
             </button>
 
             {modalType === 'earned' ? (
-              /* Earned Variant */
               <div className="text-center">
                 <div className={`mx-auto mb-6 flex h-32 w-32 items-center justify-center rounded-full ${selectedBadge.color} ring-8 ring-blue-50/50`}>
-                  <selectedBadge.icon className="h-16 w-16" />
+                  {React.createElement(getBadgeIcon(selectedBadge.iconKey), { className: 'h-16 w-16' })}
                 </div>
                 <div className="mb-4">
                   <span className="inline-flex items-center rounded-full bg-[#4EA24E]/10 px-3 py-1 text-xs font-bold text-[#4EA24E]">
@@ -222,12 +323,15 @@ const Bages = () => {
                   </span>
                 </div>
                 <h2 className="text-2xl font-bold text-slate-900">{selectedBadge.name}</h2>
-                <p className="mt-2 text-slate-600">Completed 5 educational modules in record time. You're showing incredible dedication!</p>
+                <p className="mt-2 text-slate-600">{selectedBadge.description}</p>
+                <div className="mt-4 rounded-2xl bg-emerald-50 p-4 text-left text-sm text-emerald-700">
+                  {selectedBadge.progressLabel}
+                </div>
                 <div className="mt-8 border-t border-slate-100 pt-6 text-left">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-xs uppercase tracking-wider text-slate-400 font-semibold">Earned On</p>
-                      <p className="text-sm font-medium text-slate-700">October 14, 2023</p>
+                      <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Earned On</p>
+                      <p className="text-sm font-medium text-slate-700">{selectedBadge.earnedAtLabel || 'Recently'}</p>
                     </div>
                     <button className="flex items-center space-x-2 rounded-lg bg-[#4EA24E] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#3D8C3D]">
                       <Share2 className="h-4 w-4" />
@@ -237,7 +341,6 @@ const Bages = () => {
                 </div>
               </div>
             ) : (
-              /* Locked Variant */
               <div className="text-center">
                 <div className="mx-auto mb-6 flex h-32 w-32 items-center justify-center rounded-full bg-slate-100 text-slate-400 ring-8 ring-slate-50">
                   <Lock className="h-16 w-16" />
@@ -248,17 +351,18 @@ const Bages = () => {
                   </span>
                 </div>
                 <h2 className="text-2xl font-bold text-slate-900">{selectedBadge.name}</h2>
-                <p className="mt-2 text-slate-600">Complete all introductory environmental modules to unlock this achievement.</p>
+                <p className="mt-2 text-slate-600">{selectedBadge.description}</p>
                 <div className="mt-8 border-t border-slate-100 pt-6 text-left">
-                  <p className="mb-2 text-xs uppercase tracking-wider text-slate-400 font-semibold">How to Unlock</p>
+                  <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-400">How to Unlock</p>
                   <div className="mb-4 flex items-center justify-between text-sm">
-                    <span className="font-medium text-slate-700">8 of 12 Modules Done</span>
-                    <span className="text-[#4EA24E] font-bold">66%</span>
+                    <span className="font-medium text-slate-700">{selectedBadge.progressLabel}</span>
+                    <span className="font-bold text-[#4EA24E]">{selectedBadge.progressPercent}%</span>
                   </div>
                   <div className="h-2 w-full rounded-full bg-slate-100">
-                    <div className="h-2 rounded-full bg-[#4EA24E]" style={{ width: '66%' }}></div>
+                    <div className="h-2 rounded-full bg-[#4EA24E]" style={{ width: `${selectedBadge.progressPercent}%` }} />
                   </div>
-                  <button className="mt-6 w-full rounded-lg bg-slate-900 py-3 text-sm font-semibold text-white transition hover:bg-slate-800">
+                  <p className="mt-4 text-sm text-slate-600">{selectedBadge.unlockText}</p>
+                  <button onClick={() => navigate('/modules')} className="mt-6 w-full rounded-lg bg-slate-900 py-3 text-sm font-semibold text-white transition hover:bg-slate-800">
                     View Related Modules
                   </button>
                 </div>

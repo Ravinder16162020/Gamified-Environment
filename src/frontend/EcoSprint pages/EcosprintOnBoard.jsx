@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './EcosprintOnBoard.module.css';
+import { updateProfile } from '../../api';
 
 const EcosprintOnBoard = () => {
   const navigate = useNavigate();
@@ -8,16 +9,37 @@ const EcosprintOnBoard = () => {
   const [selectedInterests, setSelectedInterests] = useState(['reforestation']);
   const [expandedTour, setExpandedTour] = useState(null);
 
-  const handleNext = () => {
+  const persistOnboarding = async () => {
+    const email = String(localStorage.getItem('userEmail') || '').trim();
+
+    if (!email) {
+      return;
+    }
+
+    await updateProfile({
+      email,
+      interests: selectedInterests,
+      journeyType: 'school',
+      onboardingCompleted: true
+    });
+  };
+
+  const handleNext = async () => {
     if (currentStep < 4) {
       setCurrentStep(currentStep + 1);
+      return;
     } else {
-      // Final step - go to dashboard
+      await persistOnboarding().catch(() => {
+        // Keep the onboarding flow moving even if persistence fails.
+      });
       navigate('/dashboard');
     }
   };
 
-  const handleSkip = () => {
+  const handleSkip = async () => {
+    await persistOnboarding().catch(() => {
+      // Skip should still reach the dashboard even if persistence fails.
+    });
     navigate('/dashboard');
   };
 

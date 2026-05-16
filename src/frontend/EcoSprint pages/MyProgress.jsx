@@ -1,91 +1,207 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  Leaf, LayoutDashboard, BookOpen, LineChart, Trophy, Users, 
-  Settings, Bell, Calendar, ChevronDown, Zap, Book, CheckSquare, 
-  Award, Eye, RefreshCw
+import {
+  LayoutDashboard,
+  Book,
+  CheckSquare,
+  Award,
+  Bell,
+  Calendar,
+  ChevronDown,
+  Zap,
+  Eye,
+  RefreshCw
 } from 'lucide-react';
 import SidebarEcoDboard from '../../components/Sidebar/SidebarEcoDboard';
+import { getProgress } from '../../api';
 import styles from './MyProgress.module.css';
 
-// User data
-const userData = {
-  name: "Alex Johnson",
-  level: "Level 4 Eco-Guardian",
-  avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuDaCwoap09JM6-jTa1ngELbX9uilyEg69IJNhQPA1RjRVBOI2qBhIs9dou3v7TRmNoF7H-6ofTUNry8Oh6KXjVnFcm0WtKpoiytPfImUma4L6svpQc5S4REWJElDIVyJmnvgO7dnQbXCAWLBg4rW78B8Dcmx3-ho2z7Tu-zaURvqafDG9_iJ1wPe3_Qt5fg4OumMjxHBQX4c1Yngf__40-T-WcTPg_S2Gos8uxDq1Nnq6olam5QTLkB9UlaixsHo1R_HRnp6317PQ"
+const DEFAULT_PROGRESS = {
+  user: {
+    name: '',
+    avatarUrl: '',
+    levelLabel: 'Level 1',
+    title: 'Eco-Explorer',
+    streakLabel: '0 Day Streak',
+    points: 0
+  },
+  stats: {
+    totalPoints: 0,
+    modulesCompleted: '0/8',
+    quizzesTaken: 0,
+    averageScore: '0%'
+  },
+  chart: {
+    labels: [],
+    values: []
+  },
+  topicMastery: [],
+  heatmap: {
+    cells: [],
+    sessions: 0
+  },
+  roadmap: {
+    currentLevel: 1,
+    currentTitle: 'Eco-Explorer',
+    pointsNeeded: 0,
+    progress: 0,
+    levels: []
+  },
+  quizHistory: []
 };
 
-// Stats data
-const statsData = {
-  totalPoints: 1250,
-  modulesCompleted: "5/8",
-  quizzesTaken: 5,
-  averageScore: "76%"
+const PERIOD_OPTIONS = ['30days', '90days', 'all'];
+
+const getPeriodLabel = (period) => {
+  if (period === '90days') return 'Last 90 Days';
+  if (period === 'all') return 'All Time';
+  return 'Last 30 Days';
 };
 
-// Topic mastery data
-const topicMastery = [
-  { topic: "Climate Change", percentage: 100 },
-  { topic: "Renewable Energy", percentage: 65 },
-  { topic: "Waste Management", percentage: 40 },
-  { topic: "Water Conservation", percentage: 20 },
-  { topic: "Biodiversity", percentage: 0 }
-];
+const getStatusBadge = (status) => {
+  if (status === 'passed') {
+    return <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-[10px] font-bold">PASSED</span>;
+  }
 
-// Quiz history data
-const quizHistory = [
-  { name: "Intro to Climate Change", date: "Oct 12, 2023", score: "100%", status: "passed" },
-  { name: "Solar Power Fundamentals", date: "Oct 08, 2023", score: "85%", status: "passed" },
-  { name: "Ocean Conservation Basics", date: "Oct 05, 2023", score: "60%", status: "retry" }
-];
-
-// Chart data - points over time (last 30 days)
-const chartData = Array.from({length: 30}, (_, i) => 950 + (i * 10.3));
-
-// Heatmap data (52 weeks x 7 days = 364 cells)
-const generateHeatmapData = () => {
-  return Array.from({ length: 52 * 7 }, () => {
-    const rand = Math.random();
-    if (rand > 0.8) return 'bg-green-600';
-    if (rand > 0.6) return 'bg-green-400';
-    if (rand > 0.4) return 'bg-green-200';
-    return 'bg-slate-100';
-  });
+  return <span className="px-2 py-1 bg-orange-100 text-orange-700 rounded-full text-[10px] font-bold">RETRY</span>;
 };
 
-// Level roadmap data
-const levels = [
-  { num: 1, name: "Seed", completed: true },
-  { num: 2, name: "Sprout", completed: true },
-  { num: 3, name: "Sapling", completed: true },
-  { num: 4, name: "Hero", completed: true, active: true },
-  { num: 5, name: "Ranger", completed: false },
-  { num: 6, name: "Warrior", completed: false },
-  { num: 7, name: "Guardian", completed: false },
-  { num: 8, name: "Elder", completed: false },
-  { num: 9, name: "Sage", completed: false },
-  { num: 10, name: "Master", completed: false }
-];
+const getScoreColor = (score) => {
+  const num = parseInt(score, 10);
+  if (num >= 80) return 'text-[#4EA24E]';
+  if (num >= 60) return 'text-orange-500';
+  return 'text-red-500';
+};
+
+const getHeatmapColor = (count) => {
+  if (count >= 3) return 'bg-green-600';
+  if (count === 2) return 'bg-green-400';
+  if (count === 1) return 'bg-green-200';
+  return 'bg-slate-100';
+};
+
+const getInitials = (name = '') => {
+  const initials = name
+    .split(' ')
+    .filter(Boolean)
+    .map((part) => part[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2);
+
+  return initials || 'EP';
+};
+
+const PointsChart = ({ values }) => {
+  if (!values.length) {
+    return <div className="w-full h-full rounded-xl border border-dashed border-slate-200 bg-slate-50 flex items-center justify-center text-sm text-slate-400">No chart data yet</div>;
+  }
+
+  const maxValue = Math.max(...values);
+  const minValue = Math.min(...values);
+  const range = Math.max(maxValue - minValue, 1);
+  const width = 100;
+  const height = 100;
+
+  const points = values
+    .map((value, index) => {
+      const x = (index / (values.length - 1 || 1)) * width;
+      const y = height - ((value - minValue) / range) * height;
+      return `${x},${y}`;
+    })
+    .join(' ');
+
+  return (
+    <svg viewBox="0 0 100 100" className="w-full h-full" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="chartGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#4EA24E" stopOpacity="0.12" />
+          <stop offset="100%" stopColor="#4EA24E" stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <polygon points={`0,100 ${points} 100,100`} fill="url(#chartGradient)" />
+      <polyline
+        points={points}
+        fill="none"
+        stroke="#4EA24E"
+        strokeWidth="0.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};
 
 const MyProgress = () => {
   const navigate = useNavigate();
   const [animatedPoints, setAnimatedPoints] = useState(0);
-  const [progressBars, setProgressBars] = useState(topicMastery.map(() => 0));
-  const [roadmapProgress, setRoadmapProgress] = useState(0);
-  const [heatmapData] = useState(generateHeatmapData());
+  const [progressData, setProgressData] = useState(DEFAULT_PROGRESS);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [timeFilter, setTimeFilter] = useState('30days');
 
-  // Animate stats count-up
   useEffect(() => {
-    const duration = 2000;
-    const steps = duration / 16;
-    const increment = statsData.totalPoints / steps;
+    const loadProgress = async () => {
+      const email = String(localStorage.getItem('userEmail') || '').trim();
+      if (!email) {
+        setLoading(false);
+        setError('No signed in user found.');
+        return;
+      }
+
+      try {
+        setLoading(true);
+        setError('');
+        const data = await getProgress(email, timeFilter);
+        setProgressData({
+          ...DEFAULT_PROGRESS,
+          ...data,
+          user: {
+            ...DEFAULT_PROGRESS.user,
+            ...(data.user || {})
+          },
+          stats: {
+            ...DEFAULT_PROGRESS.stats,
+            ...(data.stats || {})
+          },
+          chart: {
+            labels: Array.isArray(data.chart?.labels) ? data.chart.labels : [],
+            values: Array.isArray(data.chart?.values) ? data.chart.values : []
+          },
+          topicMastery: Array.isArray(data.topicMastery) ? data.topicMastery : [],
+          heatmap: {
+            cells: Array.isArray(data.heatmap?.cells) ? data.heatmap.cells : [],
+            sessions: Number(data.heatmap?.sessions || 0)
+          },
+          roadmap: {
+            ...DEFAULT_PROGRESS.roadmap,
+            ...(data.roadmap || {}),
+            levels: Array.isArray(data.roadmap?.levels) ? data.roadmap.levels : []
+          },
+          quizHistory: Array.isArray(data.quizHistory) ? data.quizHistory : []
+        });
+      } catch (loadError) {
+        setError(loadError?.message || 'Failed to load progress.');
+        setProgressData(DEFAULT_PROGRESS);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProgress();
+  }, [timeFilter]);
+
+  useEffect(() => {
+    const target = Number(progressData.stats.totalPoints || 0);
     let current = 0;
+    const duration = 1200;
+    const steps = Math.max(Math.floor(duration / 16), 1);
+    const increment = target / steps;
 
     const timer = setInterval(() => {
       current += increment;
-      if (current >= statsData.totalPoints) {
-        setAnimatedPoints(statsData.totalPoints);
+      if (current >= target) {
+        setAnimatedPoints(target);
         clearInterval(timer);
       } else {
         setAnimatedPoints(Math.floor(current));
@@ -93,92 +209,33 @@ const MyProgress = () => {
     }, 16);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [progressData.stats.totalPoints]);
 
-  // Animate progress bars
-  useEffect(() => {
-    setTimeout(() => {
-      setProgressBars(topicMastery.map(t => t.percentage));
-    }, 500);
-  }, []);
+  const progressBars = useMemo(
+    () => progressData.topicMastery.map((item) => item.percentage),
+    [progressData.topicMastery]
+  );
 
-  // Animate roadmap progress
-  useEffect(() => {
-    setTimeout(() => {
-      setRoadmapProgress(35);
-    }, 500);
-  }, []);
+  const roadmapProgress = Number(progressData.roadmap.progress || 0);
+  const heatmapSessions = Number(progressData.heatmap.sessions || 0);
 
-  // Simple SVG chart component
-  const PointsChart = () => {
-    const maxValue = Math.max(...chartData);
-    const minValue = Math.min(...chartData);
-    const range = maxValue - minValue;
-    const width = 100;
-    const height = 100;
-    
-    const points = chartData.map((value, index) => {
-      const x = (index / (chartData.length - 1)) * width;
-      const y = height - ((value - minValue) / range) * height;
-      return `${x},${y}`;
-    }).join(' ');
-
-    return (
-      <svg viewBox="0 0 100 100" className="w-full h-full" preserveAspectRatio="none">
-        <defs>
-          <linearGradient id="chartGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#4EA24E" stopOpacity="0.1" />
-            <stop offset="100%" stopColor="#4EA24E" stopOpacity="0" />
-          </linearGradient>
-        </defs>
-        <polygon 
-          points={`0,100 ${points} 100,100`} 
-          fill="url(#chartGradient)" 
-        />
-        <polyline 
-          points={points} 
-          fill="none" 
-          stroke="#4EA24E" 
-          strokeWidth="0.5" 
-          strokeLinecap="round" 
-          strokeLinejoin="round"
-        />
-      </svg>
-    );
+  const onCyclePeriod = () => {
+    setTimeFilter((current) => {
+      const index = PERIOD_OPTIONS.indexOf(current);
+      return PERIOD_OPTIONS[(index + 1) % PERIOD_OPTIONS.length];
+    });
   };
 
-  const getStatusBadge = (status) => {
-    if (status === 'passed') {
-      return (
-        <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-[10px] font-bold">
-          PASSED
-        </span>
-      );
-    }
-    return (
-      <span className="px-2 py-1 bg-orange-100 text-orange-700 rounded-full text-[10px] font-bold">
-        RETRY
-      </span>
-    );
-  };
-
-  const getScoreColor = (score) => {
-    const num = parseInt(score);
-    if (num >= 80) return 'text-[#4EA24E]';
-    if (num >= 60) return 'text-orange-500';
-    return 'text-red-500';
-  };
+  const userInitials = getInitials(progressData.user.name);
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-sans text-slate-900">
       <SidebarEcoDboard />
-      
-      {/* Main Content Area */}
+
       <main className="flex-1 ml-20">
-        {/* Navbar */}
         <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-10">
           <div className="flex items-center gap-4 text-slate-500">
-            <span className="text-sm">Welcome back, <strong>{userData.name}</strong></span>
+            <span className="text-sm">Welcome back, <strong>{progressData.user.name || 'Learner'}</strong></span>
           </div>
           <div className="flex items-center gap-6">
             <div className="relative">
@@ -187,30 +244,45 @@ const MyProgress = () => {
             </div>
             <div className="flex items-center gap-3 border-l pl-6 border-slate-200">
               <div className="text-right">
-                <p className="text-xs font-semibold">{userData.name}</p>
-                <p className="text-[10px] text-slate-500">{userData.level}</p>
+                <p className="text-xs font-semibold">{progressData.user.name || 'Learner'}</p>
+                <p className="text-[10px] text-slate-500">{progressData.user.levelLabel}</p>
               </div>
-              <img alt="Profile" className="w-10 h-10 rounded-full border border-slate-200" src={userData.avatar} />
+              {progressData.user.avatarUrl ? (
+                <img alt="Profile" className="w-10 h-10 rounded-full border border-slate-200 object-cover" src={progressData.user.avatarUrl} />
+              ) : (
+                <div className="w-10 h-10 rounded-full border border-slate-200 bg-[#4EA24E] text-white flex items-center justify-center text-sm font-bold">
+                  {userInitials}
+                </div>
+              )}
             </div>
           </div>
         </header>
 
-        {/* Content Scroll Area */}
         <div className="p-8">
-          {/* Header Section */}
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
             <div>
               <h1 className="text-2xl font-bold text-slate-800">My Progress</h1>
               <p className="text-slate-500 text-sm">Track your journey to becoming a sustainability expert.</p>
             </div>
-            <button className="flex items-center gap-3 bg-white px-4 py-2 rounded-lg border border-slate-200 shadow-sm">
+            <button onClick={onCyclePeriod} className="flex items-center gap-3 bg-white px-4 py-2 rounded-lg border border-slate-200 shadow-sm">
               <Calendar className="w-4 h-4 text-slate-400" />
-              <span className="text-sm font-medium text-slate-600">Last 30 Days</span>
+              <span className="text-sm font-medium text-slate-600">{getPeriodLabel(timeFilter)}</span>
               <ChevronDown className="w-4 h-4 text-slate-400" />
             </button>
           </div>
 
-          {/* Stats Row */}
+          {loading && (
+            <div className="mb-6 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-500 shadow-sm">
+              Loading your progress...
+            </div>
+          )}
+
+          {error && !loading && (
+            <div className="mb-6 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700 shadow-sm">
+              {error}
+            </div>
+          )}
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
               <div className="p-3 bg-green-50 text-[#4EA24E] rounded-lg">
@@ -227,7 +299,7 @@ const MyProgress = () => {
               </div>
               <div>
                 <p className="text-xs text-slate-500 font-medium">Modules Completed</p>
-                <h3 className="text-2xl font-bold text-slate-800">{statsData.modulesCompleted}</h3>
+                <h3 className="text-2xl font-bold text-slate-800">{progressData.stats.modulesCompleted}</h3>
               </div>
             </div>
             <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
@@ -236,7 +308,7 @@ const MyProgress = () => {
               </div>
               <div>
                 <p className="text-xs text-slate-500 font-medium">Quizzes Taken</p>
-                <h3 className="text-2xl font-bold text-slate-800">{statsData.quizzesTaken}</h3>
+                <h3 className="text-2xl font-bold text-slate-800">{progressData.stats.quizzesTaken}</h3>
               </div>
             </div>
             <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center gap-4">
@@ -245,14 +317,12 @@ const MyProgress = () => {
               </div>
               <div>
                 <p className="text-xs text-slate-500 font-medium">Average Score</p>
-                <h3 className="text-2xl font-bold text-slate-800">{statsData.averageScore}</h3>
+                <h3 className="text-2xl font-bold text-slate-800">{progressData.stats.averageScore}</h3>
               </div>
             </div>
           </div>
 
-          {/* Points Chart & Topic Mastery */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-            {/* Points Chart */}
             <div className="lg:col-span-2 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="font-bold text-slate-800">Points Over Time</h3>
@@ -263,28 +333,30 @@ const MyProgress = () => {
                 </div>
               </div>
               <div className="h-64">
-                <PointsChart />
+                <PointsChart values={progressData.chart.values} />
               </div>
             </div>
 
-            {/* Topic Mastery */}
             <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
               <h3 className="font-bold text-slate-800 mb-6">Topic Mastery</h3>
               <div className="space-y-4">
-                {topicMastery.map((item, index) => (
-                  <div key={index}>
+                {progressData.topicMastery.map((item, index) => (
+                  <div key={`${item.topic}-${index}`}>
                     <div className="flex justify-between text-xs mb-1">
                       <span className="text-slate-600">{item.topic}</span>
                       <span className="font-bold text-[#4EA24E]">{item.percentage}%</span>
                     </div>
                     <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                      <div 
+                      <div
                         className="bg-[#4EA24E] h-full transition-all duration-1000 ease-in-out"
-                        style={{ width: `${progressBars[index]}%` }}
+                        style={{ width: `${progressBars[index] || 0}%` }}
                       ></div>
                     </div>
                   </div>
                 ))}
+                {!progressData.topicMastery.length && (
+                  <p className="text-sm text-slate-500">No topic mastery data yet.</p>
+                )}
               </div>
               <button className="w-full mt-6 py-2 text-sm text-[#4EA24E] font-semibold border border-[#4EA24E] rounded-lg hover:bg-green-50 transition-colors">
                 View Detailed Breakdown
@@ -292,19 +364,15 @@ const MyProgress = () => {
             </div>
           </div>
 
-          {/* Activity Heatmap */}
           <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm mb-8">
             <div className="flex items-center justify-between mb-6">
               <h3 className="font-bold text-slate-800">Learning Activity</h3>
-              <span className="text-xs text-slate-500">243 sessions in the last year</span>
+              <span className="text-xs text-slate-500">{heatmapSessions} sessions in the last year</span>
             </div>
             <div className="overflow-x-auto">
               <div className="flex flex-wrap gap-1 min-w-[800px]">
-                {heatmapData.map((color, index) => (
-                  <div 
-                    key={index} 
-                    className={`w-3 h-3 rounded-sm ${color}`}
-                  ></div>
+                {(progressData.heatmap.cells || []).map((count, index) => (
+                  <div key={index} className={`w-3 h-3 rounded-sm ${getHeatmapColor(count)}`}></div>
                 ))}
               </div>
             </div>
@@ -318,42 +386,41 @@ const MyProgress = () => {
             </div>
           </div>
 
-          {/* Level Progress Roadmap */}
           <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm mb-8">
             <div className="flex flex-col md:flex-row md:items-center justify-between mb-8">
               <div>
-                <h3 className="font-bold text-slate-800">Eco-Guardian Level 4</h3>
-                <p className="text-sm text-slate-500">125 points until Level 5</p>
+                <h3 className="font-bold text-slate-800">{progressData.roadmap.currentLevel === 1 ? 'Eco-Seed' : `Eco-Guardian Level ${progressData.roadmap.currentLevel}`}</h3>
+                <p className="text-sm text-slate-500">
+                  {progressData.roadmap.pointsNeeded} points until Level {Math.min(progressData.roadmap.currentLevel + 1, 10)}
+                </p>
               </div>
               <div className="mt-4 md:mt-0 px-4 py-2 bg-[#4EA24E]/10 text-[#4EA24E] rounded-full text-sm font-bold">
-                Current Title: Eco-Advocate
+                Current Title: {progressData.roadmap.currentTitle}
               </div>
             </div>
             <div className="relative py-10">
-              {/* Connecting Line */}
               <div className="absolute top-1/2 left-0 w-full h-1 bg-slate-100 -translate-y-1/2"></div>
-              <div 
+              <div
                 className="absolute top-1/2 left-0 h-1 bg-[#4EA24E] -translate-y-1/2 transition-all duration-1000"
                 style={{ width: `${roadmapProgress}%` }}
               ></div>
-              {/* Level Dots */}
               <div className="relative flex justify-between z-10">
-                {levels.map((level) => (
+                {(progressData.roadmap.levels || []).map((level) => (
                   <div key={level.num} className={`flex flex-col items-center ${level.active ? 'scale-125' : ''}`}>
-                    <div className={`
-                      w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold
-                      ${level.completed 
-                        ? 'bg-[#4EA24E] text-white shadow-lg shadow-green-200' 
-                        : level.active 
-                          ? 'bg-white border-2 border-[#4EA24E] text-[#4EA24E] ring-4 ring-green-50'
-                          : 'bg-slate-100 text-slate-400'
-                      }
-                    `}>
+                    <div
+                      className={`
+                        w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold
+                        ${level.completed
+                          ? 'bg-[#4EA24E] text-white shadow-lg shadow-green-200'
+                          : level.active
+                            ? 'bg-white border-2 border-[#4EA24E] text-[#4EA24E] ring-4 ring-green-50'
+                            : 'bg-slate-100 text-slate-400'
+                        }
+                      `}
+                    >
                       {level.num}
                     </div>
-                    <span className={`text-[10px] mt-2 font-semibold ${
-                      level.active ? 'text-[#4EA24E] font-bold uppercase' : 'text-slate-400'
-                    }`}>
+                    <span className={`text-[10px] mt-2 font-semibold ${level.active ? 'text-[#4EA24E] font-bold uppercase' : 'text-slate-400'}`}>
                       {level.name}
                     </span>
                   </div>
@@ -362,7 +429,6 @@ const MyProgress = () => {
             </div>
           </div>
 
-          {/* Quiz History Table */}
           <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
             <div className="p-6 border-b border-slate-100 flex items-center justify-between">
               <h3 className="font-bold text-slate-800">Quiz History</h3>
@@ -380,8 +446,8 @@ const MyProgress = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  {quizHistory.map((quiz, index) => (
-                    <tr key={index} className="hover:bg-slate-50 transition-colors">
+                  {progressData.quizHistory.map((quiz, index) => (
+                    <tr key={`${quiz.name}-${index}`} className="hover:bg-slate-50 transition-colors">
                       <td className="px-6 py-4 font-medium text-slate-700">{quiz.name}</td>
                       <td className="px-6 py-4 text-slate-500">{quiz.date}</td>
                       <td className={`px-6 py-4 font-bold ${getScoreColor(quiz.score)}`}>{quiz.score}</td>
@@ -393,6 +459,13 @@ const MyProgress = () => {
                       </td>
                     </tr>
                   ))}
+                  {!progressData.quizHistory.length && (
+                    <tr>
+                      <td className="px-6 py-8 text-sm text-slate-500" colSpan={5}>
+                        No quiz history yet.
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>

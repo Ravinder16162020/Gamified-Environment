@@ -27,7 +27,8 @@ const RoleSelection = () => {
         method: 'POST',
         body: JSON.stringify({
           email: userEmail,
-          role: selectedPath === 'school' ? 'ecosprint' : 'codesprint'
+          role: selectedPath === 'school' ? 'ecosprint' : 'codesprint',
+          pathType: selectedPath
         })
       });
 

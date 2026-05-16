@@ -1,257 +1,262 @@
-import React, { useState, useEffect } from 'react';
-import { ArrowRight, Star, Flame, CheckCircle2, Timer, PlayCircle, Zap as ZapIcon, Map, History, Medal, ShieldCheck, Target, TrendingUp, Cpu, Microscope, Rocket } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ArrowRight, Star, Flame, CheckCircle2, Timer, PlayCircle, Zap as ZapIcon, Map, History, Medal, ShieldCheck, Target, TrendingUp, Cpu, Microscope } from 'lucide-react';
 import SidebarEcoDboard from '../../components/Sidebar/SidebarEcoDboard';
 import StreakBrokenpopup from '../../popup/StreakBrokenpopup';
+import { getEcoDashboard } from '../../api';
 import styles from './EcoDashboard.module.css';
 
 const EcoDashboard = () => {
+  const navigate = useNavigate();
+  const [dashboard, setDashboard] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
   const [showStreakBrokenPopup, setShowStreakBrokenPopup] = useState(false);
-  const [previousStreak, setPreviousStreak] = useState(7);
+  const [previousStreak, setPreviousStreak] = useState(0);
 
-  // Check if streak is broken on component mount (login)
+  const user = dashboard?.user || {};
+  const overview = dashboard?.overview || {};
+  const stats = dashboard?.stats || {};
+  const quickActions = dashboard?.quickActions || {};
+  const learningPath = dashboard?.learningPath || {};
+  const recentActivity = Array.isArray(dashboard?.recentActivity) ? dashboard.recentActivity : [];
+  const leaderboardPreview = Array.isArray(dashboard?.leaderboardPreview) ? dashboard.leaderboardPreview : [];
+
   useEffect(() => {
-    // Get last login time from localStorage
     const lastLoginTime = localStorage.getItem('lastLoginTime');
     const savedStreak = localStorage.getItem('currentStreak');
-    const currentTime = new Date().getTime();
-    
-    // Convert saved streak to number, default to 7 if not found
+    const currentTime = Date.now();
     const currentStreak = savedStreak ? parseInt(savedStreak, 10) : 7;
-    
+
     if (lastLoginTime) {
-      const lastLogin = parseInt(lastLoginTime, 10);
-      const hoursSinceLastLogin = (currentTime - lastLogin) / (1000 * 60 * 60);
-      
-      // If more than 24 hours passed, streak is broken
+      const previousLogin = parseInt(lastLoginTime, 10);
+      const hoursSinceLastLogin = (currentTime - previousLogin) / (1000 * 60 * 60);
+
       if (hoursSinceLastLogin > 24) {
-        setPreviousStreak(currentStreak);
+        setPreviousStreak(Number.isNaN(currentStreak) ? 0 : currentStreak);
         setShowStreakBrokenPopup(true);
-        // Reset streak to 0 in localStorage
         localStorage.setItem('currentStreak', '0');
       }
     }
-    
-    // Update last login time
-    localStorage.setItem('lastLoginTime', currentTime.toString());
+
+    localStorage.setItem('lastLoginTime', String(currentTime));
+  }, []);
+
+  useEffect(() => {
+    const userEmail = String(localStorage.getItem('userEmail') || '').trim();
+
+    if (!userEmail) {
+      setLoadError('Missing user session. Please log in again.');
+      setIsLoading(false);
+      return;
+    }
+
+    const loadDashboard = async () => {
+      try {
+        const data = await getEcoDashboard(userEmail);
+        setDashboard(data);
+        localStorage.setItem('xp', String(data?.stats?.totalPoints || 0));
+        window.dispatchEvent(new CustomEvent('ecoSprintProfileUpdated', { detail: data?.user || {} }));
+      } catch (error) {
+        setLoadError(error.message || 'Failed to load dashboard');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadDashboard();
   }, []);
 
   const handleCloseStreakPopup = () => {
     setShowStreakBrokenPopup(false);
   };
+
   return (
     <div className={`h-screen bg-[#F8FAFC] font-sans text-[#0F172A] overflow-hidden ${showStreakBrokenPopup ? 'opacity-40 grayscale-[0.5]' : ''}`}>
-      {showStreakBrokenPopup && (
-        <StreakBrokenpopup 
-          onClose={handleCloseStreakPopup}
-          previousStreak={previousStreak}
-        />
-      )}
+      {showStreakBrokenPopup && <StreakBrokenpopup onClose={handleCloseStreakPopup} previousStreak={previousStreak} />}
       <SidebarEcoDboard />
-      <main className="ml-20 h-full overflow-y-auto bg-[#F8FAFC] p-6">
-          <div className="max-w-7xl mx-auto space-y-8">
-            {/* SECTION 1: Welcome Banner */}
-            <section className={`relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#4EA24E] to-[#68C068] p-8 text-white shadow-lg ${styles.welcomeBanner}`}>
-              <div className="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 bg-white/10 rounded-full animate-pulse"></div>
-              <div className="absolute bottom-0 right-20 -mb-10 w-40 h-40 bg-white/5 rounded-full animate-pulse"></div>
-              <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-                <div>
-                  <h1 className="text-3xl font-bold mb-2">Welcome back, Alex! 👋</h1>
-                  <p className="text-white/80 max-w-lg">
-                    You've completed <span className="font-bold text-white text-lg">12 challenges</span> this week. You're in the top 5% of learners in your school. Keep up the momentum!
-                  </p>
-                  <button className="mt-6 bg-white px-6 py-2.5 rounded-full font-bold text-sm shadow-xl hover:bg-slate-50 transition-all flex items-center gap-2 text-[#4EA24E]">
-                    Continue Learning <ArrowRight className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
+      <main className="ml-20 h-full w-[calc(100%-5rem)] overflow-y-auto bg-[#F8FAFC] px-6 py-6">
+        <div className="w-full space-y-8">
+          {isLoading ? (
+            <section className="rounded-3xl border border-dashed border-slate-200 bg-white p-10 text-center shadow-sm">
+              <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#4EA24E]">Loading EcoSprint</p>
+              <h1 className="mt-3 text-2xl font-bold text-slate-900">Preparing your dashboard</h1>
+              <p className="mt-2 text-sm text-slate-500">We are pulling your real progress, rank, and activity from the backend.</p>
             </section>
-
-            {/* SECTION 2: Stats Grid */}
-            <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className={`bg-white p-5 rounded-2xl shadow-sm border border-slate-100 ${styles.hoverLift} rounded-[12px] shadow-md`}>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="p-2 bg-green-50 text-[#4EA24E] rounded-lg"><Star className="w-6 h-6" /></div>
-                  <span className="text-[11px] font-bold text-[#059669] bg-emerald-50 px-2 py-0.5 rounded">+150 Today</span>
-                </div>
-                <p className="text-slate-500 text-sm font-medium">Total Points</p>
-                <h3 className="text-2xl font-bold">1,250</h3>
-              </div>
-              <div className={`bg-white p-5 rounded-2xl shadow-sm border border-slate-100 ${styles.hoverLift} rounded-[12px] shadow-md`}>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="p-2 bg-orange-50 text-orange-500 rounded-lg"><Flame className="w-6 h-6" /></div>
-                  <span className="text-[11px] font-bold text-slate-400 bg-slate-50 px-2 py-0.5 rounded">Personal Best</span>
-                </div>
-                <p className="text-slate-500 text-sm font-medium">Daily Streak</p>
-                <h3 className="text-2xl font-bold">7 Days</h3>
-              </div>
-              <div className={`bg-white p-5 rounded-2xl shadow-sm border border-slate-100 ${styles.hoverLift} rounded-[12px] shadow-md`}>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="p-2 bg-emerald-50 text-[#10B981] rounded-lg"><CheckCircle2 className="w-6 h-6" /></div>
-                  <span className="text-[11px] font-bold text-slate-400 bg-slate-50 px-2 py-0.5 rounded">46% Complete</span>
-                </div>
-                <p className="text-slate-500 text-sm font-medium">Challenges</p>
-                <h3 className="text-2xl font-bold">23/50</h3>
-              </div>
-              <div className={`bg-white p-5 rounded-2xl shadow-sm border border-slate-100 ${styles.hoverLift} rounded-[12px] shadow-md`}>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="p-2 bg-green-50 text-[#4EA24E] rounded-lg"><Star className="w-6 h-6" /></div>
-                  <div className="p-2 bg-green-50 text-[#4EA24E] rounded-lg"><Star className="w-6 h-6" /></div>
-                </div>
-                <p className="text-slate-500 text-sm font-medium">School Rank</p>
-                <h3 className="text-2xl font-bold">#45</h3>
-              </div>
+          ) : loadError ? (
+            <section className="rounded-3xl border border-rose-200 bg-rose-50 p-8 text-rose-700 shadow-sm">
+              <h1 className="text-2xl font-bold">Dashboard unavailable</h1>
+              <p className="mt-2 text-sm">{loadError}</p>
             </section>
-
-            {/* SECTION 3: Quick Actions */}
-            <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="group bg-white p-6 rounded-2xl border-l-4 border-[#F59E0B] shadow-sm hover:shadow-md transition-all cursor-pointer rounded-[12px] shadow-md">
-                <div className="flex items-start justify-between mb-4">
+          ) : (
+            <>
+              <section className={`relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#4EA24E] to-[#68C068] p-8 text-white shadow-lg ${styles.welcomeBanner}`}>
+                <div className="absolute top-0 right-0 -mr-20 -mt-20 h-80 w-80 rounded-full bg-white/10 animate-pulse"></div>
+                <div className="absolute bottom-0 right-20 -mb-10 h-40 w-40 rounded-full bg-white/5 animate-pulse"></div>
+                <div className="relative z-10 flex flex-col gap-6 md:items-start">
                   <div>
-                    <h4 className="font-bold text-slate-800">Daily Challenge</h4>
-                    <p className="text-xs text-slate-500 mt-1">Logic Puzzles • 10 Mins</p>
-                  </div>
-                  <div className="p-2 bg-amber-50 text-[#F59E0B] rounded-lg group-hover:scale-110 transition-transform"><Timer className="w-5 h-5" /></div>
-                </div>
-                <div className="flex items-center justify-between text-xs">
-                  <span className="font-bold text-[#F59E0B]">+50 XP Reward</span>
-                  <span className="text-slate-400">Expires in 4h</span>
-                </div>
-              </div>
-              <div className="group bg-white p-6 rounded-2xl border-l-4 border-[#4EA24E] shadow-sm hover:shadow-md transition-all cursor-pointer rounded-[12px] shadow-md">
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <h4 className="font-bold text-slate-800">Continue Learning</h4>
-                    <p className="text-xs text-slate-500 mt-1">Pattern Recognition</p>
-                  </div>
-                  <div className="p-2 bg-green-50 text-[#4EA24E] rounded-lg group-hover:scale-110 transition-transform"><PlayCircle className="w-5 h-5" /></div>
-                </div>
-                <div className="w-full bg-slate-100 h-1.5 rounded-full mb-2">
-                  <div className="bg-[#4EA24E] h-1.5 rounded-full" style={{width: '60%'}}></div>
-                </div>
-                <p className="text-[10px] font-bold text-slate-400 uppercase">60% Through</p>
-              </div>
-              <div className="group bg-white p-6 rounded-2xl border-l-4 border-[#10B981] shadow-sm hover:shadow-md transition-all cursor-pointer rounded-[12px] shadow-md">
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <h4 className="font-bold text-slate-800">Weekly Special</h4>
-                    <p className="text-xs text-slate-500 mt-1">Team Battle</p>
-                  </div>
-                  <div className="p-2 bg-emerald-50 text-[#10B981] rounded-lg group-hover:scale-110 transition-transform"><ZapIcon className="w-5 h-5" /></div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="bg-emerald-100 text-[#10B981] text-[10px] font-black px-2 py-0.5 rounded">2X POINTS</span>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase">Limited Time</span>
-                </div>
-              </div>
-            </section>
-
-            {/* SECTION 4: Learning Path */}
-            <section className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
-              <div className="flex items-center justify-between mb-8">
-                <h2 className="text-xl font-bold flex items-center gap-2"><Map className="w-6 h-6 text-[#4EA24E]" /> My Learning Path</h2>
-                <a className="text-[#4EA24E] text-sm font-semibold hover:underline" href="#">View All Modules</a>
-              </div>
-              <div className="relative px-10 py-4 overflow-x-auto">
-                <div className="absolute top-1/2 left-0 right-0 h-1 bg-slate-100 -translate-y-1/2 z-0 mx-10"></div>
-                <div className="absolute top-1/2 left-0 h-1 bg-[#4EA24E] -translate-y-1/2 z-0 mx-10" style={{width: '50%'}}></div>
-                <div className="relative z-10 flex justify-between min-w-[600px]">
-                  <div className="flex flex-col items-center gap-3">
-                    <div className="w-12 h-12 bg-[#4EA24E] text-white rounded-full flex items-center justify-center shadow-lg"><CheckCircle2 className="w-6 h-6" /></div>
-                    <span className="text-xs font-bold text-slate-600">Basics</span>
-                  </div>
-                  <div className="flex flex-col items-center gap-3">
-                    <div className="w-12 h-12 bg-[#4EA24E] text-white rounded-full flex items-center justify-center shadow-lg"><CheckCircle2 className="w-6 h-6" /></div>
-                    <span className="text-xs font-bold text-slate-600">Logic</span>
-                  </div>
-                  <div className="flex flex-col items-center gap-3">
-                    <div className="w-14 h-14 bg-white border-4 rounded-full flex items-center justify-center shadow-xl animate-pulse ring-8 border-[#4EA24E] text-[#4EA24E] ring-green-50"><Cpu className="w-6 h-6" /></div>
-                    <span className="text-xs font-bold text-[#4EA24E]">Patterns</span>
-                  </div>
-                  <div className="flex flex-col items-center gap-3">
-                    <div className="w-12 h-12 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center border-2 border-dashed border-slate-200"><Microscope className="w-5 h-5" /></div>
-                    <span className="text-xs font-bold text-slate-400">Analysis</span>
-                  </div>
-                  <div className="flex flex-col items-center gap-3">
-                    <div className="w-12 h-12 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center border-2 border-dashed border-slate-200"><Rocket className="w-5 h-5" /></div>
-                    <span className="text-xs font-bold text-slate-400">Mastery</span>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            {/* SECTION 5: Two-Column Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Recent Activity */}
-              <section className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
-                <h3 className="text-lg font-bold mb-6 flex items-center gap-2"><History className="w-5 h-5 text-[#4EA24E]" /> Recent Activity</h3>
-                <div className="space-y-6">
-                  <div className="flex gap-4">
-                    <div className="flex-shrink-0 w-10 h-10 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center"><ShieldCheck className="w-5 h-5" /></div>
-                    <div>
-                      <p className="text-sm font-semibold">Badge Earned: <span className="text-purple-600">Logic Master</span></p>
-                      <p className="text-xs text-slate-400">2 hours ago • Module: Advanced Logic</p>
-                    </div>
-                  </div>
-                  <div className="flex gap-4">
-                    <div className="flex-shrink-0 w-10 h-10 bg-emerald-100 text-[#10B981] rounded-full flex items-center justify-center"><Target className="w-5 h-5" /></div>
-                    <div>
-                      <p className="text-sm font-semibold">Challenge Completed: <span className="text-[#10B981]">Quick Math #12</span></p>
-                      <p className="text-xs text-slate-400">5 hours ago • Earned 30 XP</p>
-                    </div>
-                  </div>
-                  <div className="flex gap-4">
-                    <div className="flex-shrink-0 w-10 h-10 bg-blue-100 text-[#4EA24E] rounded-full flex items-center justify-center"><TrendingUp className="w-5 h-5" /></div>
-                    <div>
-                      <p className="text-sm font-semibold">Rank Up! Moved to <span className="text-[#4EA24E]">#45</span> in School</p>
-                      <p className="text-xs text-slate-400">Yesterday • 150 points gained</p>
-                    </div>
+                    <h1 className="mb-2 text-3xl font-bold">{overview.welcomeMessage || `Welcome back, ${user.name || 'Learner'}!`} 👋</h1>
+                    <p className="max-w-lg text-white/80">
+                      You completed <span className="text-lg font-bold text-white">{overview.completedThisWeek || 0} challenges</span> this week. Your current school rank is <span className="font-bold text-white">{overview.rankLabel || `#${stats.schoolRank || '--'}`}</span>.
+                    </p>
+                    <button type="button" onClick={() => navigate('/modules')} className="mt-6 flex items-center gap-2 rounded-full bg-white px-6 py-2.5 text-sm font-bold text-[#4EA24E] shadow-xl transition-all hover:bg-slate-50">
+                      Continue Learning <ArrowRight className="h-4 w-4" />
+                    </button>
                   </div>
                 </div>
               </section>
 
-              {/* Leaderboard Preview */}
-              <section className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-lg font-bold flex items-center gap-2"><Medal className="w-5 h-5 text-[#F59E0B]" /> Leaderboard</h3>
-                  <a className="text-xs font-bold text-slate-400 hover:text-[#4EA24E] transition-colors uppercase" href="#">Full Standings</a>
+              <section className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                <div className={`rounded-[12px] border border-slate-100 bg-white p-5 shadow-md ${styles.hoverLift}`}>
+                  <div className="mb-4 flex items-center justify-between">
+                    <div className="rounded-lg bg-green-50 p-2 text-[#4EA24E]"><Star className="h-6 w-6" /></div>
+                    <span className="rounded bg-emerald-50 px-2 py-0.5 text-[11px] font-bold text-[#059669]">Live</span>
+                  </div>
+                  <p className="text-sm font-medium text-slate-500">Total Points</p>
+                  <h3 className="text-2xl font-bold">{Number(stats.totalPoints || 0).toLocaleString()}</h3>
                 </div>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between p-2">
-                    <div className="flex items-center gap-3">
-                      <span className="w-6 text-sm font-bold text-[#F59E0B]">1</span>
-                      <div className="w-8 h-8 rounded-full bg-slate-200 overflow-hidden">
-                        <img alt="Avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuACFYeC-26AWDHU_xYA0U1HgEgq7u987IWInH-NTxWMixElNRVJeEUBUtgKjjBJtibEZL44YhGBA89MJ4l8QBJYslmiZrJwsQQA_FPoCL6VRSMAo6oykzvrTVFsyxrYeJf7pf9YmXyFlgkHVtCuvAmzyAUpThPX_mPVp2TYpdrZOmdBOHd5LApLL-dT5h_2yWexHfaruBZ8DcjWX3iUWvzUd8ornuu_nDHvYYkp_vJXpgfmZ7KXqUsikE0qSJKytBhNQRTi05YJ3A" />
-                      </div>
-                      <span className="text-sm font-medium">Sarah Jenkins</span>
-                    </div>
-                    <span className="text-sm font-bold">2,450 XP</span>
+                <div className={`rounded-[12px] border border-slate-100 bg-white p-5 shadow-md ${styles.hoverLift}`}>
+                  <div className="mb-4 flex items-center justify-between">
+                    <div className="rounded-lg bg-orange-50 p-2 text-orange-500"><Flame className="h-6 w-6" /></div>
+                    <span className="rounded bg-slate-50 px-2 py-0.5 text-[11px] font-bold text-slate-400">Personal Best</span>
                   </div>
-                  <div className="flex items-center justify-between p-2">
-                    <div className="flex items-center gap-3">
-                      <span className="w-6 text-sm font-bold text-slate-400">2</span>
-                      <div className="w-8 h-8 rounded-full bg-slate-200 overflow-hidden">
-                        <img alt="Avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_BzpDmN64tAzGV6Rb2WKZGhkoaOLaPQ847Hyn4tN-TbiKUAoyJIwhWV_-NWGOzlX8nX3MeeJJcJqB0M9GfziV61dFXZGBPhLBiMxmqj_xpplv18esn6KcE-RRHIKBW3K-kuONALHEA-HEG8vpJAuyL5DNGABnSjHhGk5IcOvoQvM_ujXSWy-sIY1tQCGj28pUwq31siKzx9hcmSdjGY30cK_4hWaOaWcx86Z6vNcE7GpFmp6u6MUvBsNh3mIiPy5b8Q6qIwP_qw" />
-                      </div>
-                      <span className="text-sm font-medium">Liam Thorne</span>
-                    </div>
-                    <span className="text-sm font-bold">2,120 XP</span>
+                  <p className="text-sm font-medium text-slate-500">Daily Streak</p>
+                  <h3 className="text-2xl font-bold">{Number(stats.streakDays || 0)} Days</h3>
+                </div>
+                <div className={`rounded-[12px] border border-slate-100 bg-white p-5 shadow-md ${styles.hoverLift}`}>
+                  <div className="mb-4 flex items-center justify-between">
+                    <div className="rounded-lg bg-emerald-50 p-2 text-[#10B981]"><CheckCircle2 className="h-6 w-6" /></div>
+                    <span className="rounded bg-slate-50 px-2 py-0.5 text-[11px] font-bold text-slate-400">From history</span>
                   </div>
-                  <div className="border-t border-slate-100 my-2"></div>
-                  <div className="flex items-center justify-between p-3 bg-green-50 rounded-xl border border-green-100">
-                    <div className="flex items-center gap-3">
-                      <span className="w-6 text-sm font-bold text-[#4EA24E]">45</span>
-                      <div className="w-8 h-8 rounded-full bg-white border border-[#4EA24E] overflow-hidden">
-                        <img alt="Avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqWEfAx_tLU3phq8s_8srBHnFhBlyh2hvWeWuaObBjj94OzLUMI6RDbUrKK-HuTci8cfsK045Q4KpQgqDEchYoq5HVdr3msq2eZ2HDVDe8KrTjHYKLdn2pD3Y7may46JEWUO7duN3TGThY22EXfzkRBd3mONuAW_z4lTqWujyHkzMQ8UEBdboxR8jO0xUZGRyb8wsqY1Vyb3KXbmIqZzONeNS-CQxzQyoI5wT2tIRHNprCusVNQZZDRJNyTI8ubFz0s-6dKSPKcA" />
-                      </div>
-                      <span className="text-sm font-bold text-[#4EA24E]">Alex Rivera (You)</span>
+                  <p className="text-sm font-medium text-slate-500">Challenges</p>
+                  <h3 className="text-2xl font-bold">{Number(stats.challengesCompleted || 0)}</h3>
+                </div>
+                <div className={`rounded-[12px] border border-slate-100 bg-white p-5 shadow-md ${styles.hoverLift}`}>
+                  <div className="mb-4 flex items-center justify-between">
+                    <div className="rounded-lg bg-green-50 p-2 text-[#4EA24E]"><Star className="h-6 w-6" /></div>
+                    <div className="rounded-lg bg-green-50 p-2 text-[#4EA24E]"><Star className="h-6 w-6" /></div>
+                  </div>
+                  <p className="text-sm font-medium text-slate-500">School Rank</p>
+                  <h3 className="text-2xl font-bold">#{stats.schoolRank || '--'}</h3>
+                </div>
+              </section>
+
+              <section className="grid grid-cols-1 gap-6 md:grid-cols-3">
+                <div className="group rounded-[12px] border-l-4 border-[#F59E0B] bg-white p-6 shadow-md transition-all hover:shadow-md">
+                  <div className="mb-4 flex items-start justify-between">
+                    <div>
+                      <h4 className="font-bold text-slate-800">{quickActions.dailyChallenge?.title || 'Daily Challenge'}</h4>
+                      <p className="mt-1 text-xs text-slate-500">{quickActions.dailyChallenge?.question || 'Your next challenge is waiting.'}</p>
                     </div>
-                    <span className="text-sm font-bold text-[#4EA24E]">1,250 XP</span>
+                    <div className="rounded-lg bg-amber-50 p-2 text-[#F59E0B] transition-transform group-hover:scale-110"><Timer className="h-5 w-5" /></div>
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-bold text-[#F59E0B]">+{quickActions.dailyChallenge?.reward || 0} XP Reward</span>
+                    <span className="text-slate-400">{quickActions.dailyChallenge?.expiresLabel || 'Available now'}</span>
+                  </div>
+                </div>
+                <div className="group rounded-[12px] border-l-4 border-[#4EA24E] bg-white p-6 shadow-md transition-all hover:shadow-md">
+                  <div className="mb-4 flex items-start justify-between">
+                    <div>
+                      <h4 className="font-bold text-slate-800">{quickActions.continueLearning?.title || 'Continue Learning'}</h4>
+                      <p className="mt-1 text-xs text-slate-500">{quickActions.continueLearning?.subtitle || 'Resume your path'}</p>
+                    </div>
+                    <div className="rounded-lg bg-green-50 p-2 text-[#4EA24E] transition-transform group-hover:scale-110"><PlayCircle className="h-5 w-5" /></div>
+                  </div>
+                  <div className="mb-2 h-1.5 w-full rounded-full bg-slate-100">
+                    <div className="h-1.5 rounded-full bg-[#4EA24E]" style={{ width: `${Math.min(100, Math.max(0, Number(quickActions.continueLearning?.progress || 0)))}%` }}></div>
+                  </div>
+                  <p className="text-[10px] font-bold uppercase text-slate-400">{Math.round(Number(quickActions.continueLearning?.progress || 0))}% Through</p>
+                </div>
+                <div className="group rounded-[12px] border-l-4 border-[#10B981] bg-white p-6 shadow-md transition-all hover:shadow-md">
+                  <div className="mb-4 flex items-start justify-between">
+                    <div>
+                      <h4 className="font-bold text-slate-800">{quickActions.weeklySpecial?.title || 'Weekly Special'}</h4>
+                      <p className="mt-1 text-xs text-slate-500">{quickActions.weeklySpecial?.note || 'Limited time'}</p>
+                    </div>
+                    <div className="rounded-lg bg-emerald-50 p-2 text-[#10B981] transition-transform group-hover:scale-110"><ZapIcon className="h-5 w-5" /></div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="rounded bg-emerald-100 px-2 py-0.5 text-[10px] font-black text-[#10B981]">{quickActions.weeklySpecial?.reward || '2X POINTS'}</span>
+                    <span className="text-[10px] font-bold uppercase text-slate-400">Limited Time</span>
                   </div>
                 </div>
               </section>
-            </div>
-          </div>
-        </main>
+
+              <section className="rounded-3xl border border-slate-100 bg-white p-8 shadow-sm">
+                <div className="mb-8 flex items-center justify-between">
+                  <h2 className="flex items-center gap-2 text-xl font-bold"><Map className="h-6 w-6 text-[#4EA24E]" /> {learningPath.title || 'My Learning Path'}</h2>
+                  <button type="button" onClick={() => navigate('/modules')} className="text-sm font-semibold text-[#4EA24E] hover:underline">View All Modules</button>
+                </div>
+                <div className="overflow-x-auto px-10 py-4">
+                  <div className="relative z-10 flex min-w-[600px] justify-between">
+                    {(learningPath.steps || [
+                      { label: 'Basics', completed: true },
+                      { label: 'Logic', completed: true },
+                      { label: 'Patterns', active: true },
+                      { label: 'Analysis', completed: false },
+                      { label: 'Mastery', completed: false }
+                    ]).map((step) => {
+                      const isActive = Boolean(step.active);
+                      const isCompleted = Boolean(step.completed);
+                      return (
+                        <div key={step.label} className="flex flex-col items-center gap-3">
+                          <div className={`flex h-12 w-12 items-center justify-center rounded-full shadow-lg ${isCompleted ? 'bg-[#4EA24E] text-white' : isActive ? 'animate-pulse border-4 border-[#4EA24E] bg-white text-[#4EA24E] ring-8 ring-green-50' : 'border-2 border-dashed border-slate-200 bg-slate-100 text-slate-400'}`}>
+                            {isCompleted ? <CheckCircle2 className="h-6 w-6" /> : isActive ? <Cpu className="h-6 w-6" /> : <Microscope className="h-5 w-5" />}
+                          </div>
+                          <span className={`text-xs font-bold ${isActive ? 'text-[#4EA24E]' : 'text-slate-600'}`}>{step.label}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </section>
+
+              <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+                <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-sm">
+                  <h3 className="mb-6 flex items-center gap-2 text-lg font-bold"><History className="h-5 w-5 text-[#4EA24E]" /> Recent Activity</h3>
+                  <div className="space-y-6">
+                    {recentActivity.length ? recentActivity.map((item, index) => (
+                      <div className="flex gap-4" key={`${item.title}-${index}`}>
+                        <div className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full ${item.tone === 'success' ? 'bg-emerald-100 text-[#10B981]' : item.tone === 'warning' ? 'bg-amber-100 text-[#F59E0B]' : 'bg-slate-100 text-slate-500'}`}>
+                          {item.tone === 'success' ? <ShieldCheck className="h-5 w-5" /> : item.tone === 'warning' ? <Target className="h-5 w-5" /> : <TrendingUp className="h-5 w-5" />}
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold">{item.title}</p>
+                          <p className="text-xs text-slate-400">{item.detail}</p>
+                        </div>
+                      </div>
+                    )) : <p className="text-sm text-slate-500">No recent activity yet.</p>}
+                  </div>
+                </section>
+
+                <section className="rounded-3xl border border-slate-100 bg-white p-6 shadow-sm">
+                  <div className="mb-6 flex items-center justify-between">
+                    <h3 className="flex items-center gap-2 text-lg font-bold"><Medal className="h-5 w-5 text-[#F59E0B]" /> Leaderboard</h3>
+                    <button type="button" onClick={() => navigate('/leaderboard')} className="text-xs font-bold uppercase text-slate-400 transition-colors hover:text-[#4EA24E]">Full Standings</button>
+                  </div>
+                  <div className="space-y-3">
+                    {leaderboardPreview.length ? leaderboardPreview.map((member) => (
+                      <div className={`flex items-center justify-between rounded-xl p-3 ${member.isCurrentUser ? 'border border-[#4EA24E] bg-green-50' : 'bg-slate-50'}`} key={`${member.name}-${member.rank}`}>
+                        <div className="flex items-center gap-3">
+                          <span className={`w-6 text-sm font-bold ${member.rank === 1 ? 'text-[#F59E0B]' : 'text-slate-400'}`}>{member.rank}</span>
+                          {member.avatarUrl ? (
+                            <img alt={member.name} className="h-8 w-8 rounded-full border border-slate-200 object-cover" src={member.avatarUrl} />
+                          ) : (
+                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-200 text-xs font-bold text-slate-600">{(member.name || 'EP').split(' ').filter(Boolean).map((part) => part[0]).join('').slice(0, 2).toUpperCase()}</div>
+                          )}
+                          <span className="text-sm font-medium">{member.name}</span>
+                        </div>
+                        <span className={`text-sm font-bold ${member.isCurrentUser ? 'text-[#4EA24E]' : 'text-slate-800'}`}>{member.points.toLocaleString()} XP</span>
+                      </div>
+                    )) : <p className="text-sm text-slate-500">No leaderboard entries yet.</p>}
+                  </div>
+                </section>
+              </div>
+            </>
+          )}
+        </div>
+      </main>
     </div>
   );
 };

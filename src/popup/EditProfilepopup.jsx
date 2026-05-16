@@ -1,27 +1,45 @@
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './EditProfilepopup.module.css';
+import { updateProfile } from '../api';
 
-const EditProfilepopup = ({ onClose }) => {
+const EditProfilepopup = ({ onClose, userEmail, initialProfile, onSaved }) => {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
   
   const [formData, setFormData] = useState({
-    fullName: 'Alex Rivers',
-    email: 'alex.rivers@ecosprint.io',
-    bio: 'Passionate about urban gardening and renewable energy solutions. Always sprinting for a greener future. 🌱⚡'
+    fullName: '',
+    email: '',
+    bio: '',
+    avatarUrl: ''
   });
   
-  const [bioCharCount, setBioCharCount] = useState(104);
+  const [bioCharCount, setBioCharCount] = useState(0);
   const maxBioLength = 150;
   
-  const [selectedInterests, setSelectedInterests] = useState([
-    'Climate', 'Energy', 'Waste'
-  ]);
+  const [selectedInterests, setSelectedInterests] = useState([]);
+  const [originalEmail, setOriginalEmail] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   
   const availableInterests = [
     'Climate', 'Energy', 'Water', 'Waste', 'Solar', 'EVs', 'Recycling', 'Policy'
   ];
+
+  useEffect(() => {
+    const nextProfile = initialProfile || {};
+    const existingEmail = String(userEmail || nextProfile.email || '').trim().toLowerCase();
+
+    setOriginalEmail(existingEmail);
+    setFormData({
+      fullName: nextProfile.name || '',
+      email: existingEmail,
+      bio: nextProfile.bio || '',
+      avatarUrl: nextProfile.avatarUrl || ''
+    });
+    setSelectedInterests(Array.isArray(nextProfile.interests) ? nextProfile.interests : []);
+    setBioCharCount((nextProfile.bio || '').length);
+  }, [initialProfile, userEmail]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -48,22 +66,53 @@ const EditProfilepopup = ({ onClose }) => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      console.log('Uploading file:', file.name);
-      // Handle file upload logic here
+      const reader = new FileReader();
+      reader.onload = () => {
+        setFormData(prev => ({ ...prev, avatarUrl: String(reader.result || '') }));
+      };
+      reader.readAsDataURL(file);
     }
   };
 
-  const handleSave = () => {
-    // Save changes and close popup
-    console.log('Saving profile:', formData, selectedInterests);
-    onClose();
-    navigate('/profile');
+  const handleSave = async () => {
+    try {
+      const normalizedOriginalEmail = String(originalEmail || userEmail || '').trim().toLowerCase();
+      const normalizedNewEmail = String(formData.email || '').trim().toLowerCase();
+
+      if (!normalizedOriginalEmail) {
+        setErrorMessage('Current account email is missing. Please refresh and try again.');
+        return;
+      }
+
+      if (!normalizedNewEmail) {
+        setErrorMessage('Email is required.');
+        return;
+      }
+
+      setIsSaving(true);
+      setErrorMessage('');
+
+      const updatedProfile = await updateProfile({
+        email: normalizedOriginalEmail,
+        fullName: formData.fullName,
+        newEmail: normalizedNewEmail,
+        bio: formData.bio,
+        interests: selectedInterests,
+        avatarUrl: formData.avatarUrl
+      });
+
+      await onSaved?.(updatedProfile);
+      onClose();
+      navigate('/profile');
+    } catch (error) {
+      setErrorMessage(error?.message || 'Failed to save profile. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleCancel = () => {
-    // Close popup and go back to profile
     onClose();
-    navigate('/profile');
   };
 
   const getInitials = (name) => {
@@ -94,12 +143,21 @@ const EditProfilepopup = ({ onClose }) => {
 
         {/* Scrollable Content */}
         <div className={styles.content}>
+          {errorMessage && (
+            <div className={styles.errorBanner}>
+              {errorMessage}
+            </div>
+          )}
           {/* Avatar Upload Section */}
           <div className={styles.avatarSection}>
             <div className={styles.avatarWrapper} onClick={handleUploadClick}>
-              <div className={styles.avatar}>
-                {getInitials(formData.fullName)}
-              </div>
+              {formData.avatarUrl ? (
+                <img className={styles.avatarImage} src={formData.avatarUrl} alt="Profile preview" />
+              ) : (
+                <div className={styles.avatar}>
+                  {getInitials(formData.fullName || 'AR')}
+                </div>
+              )}
               {/* Overlay Camera Icon */}
               <div className={styles.avatarOverlay}>
                 <svg className={styles.cameraIcon} viewBox="0 0 24 24" fill="currentColor">
@@ -191,8 +249,8 @@ const EditProfilepopup = ({ onClose }) => {
           <button onClick={handleCancel} className={styles.cancelBtn}>
             Cancel
           </button>
-          <button onClick={handleSave} className={styles.saveBtn}>
-            Save Changes
+          <button onClick={handleSave} className={styles.saveBtn} disabled={isSaving}>
+            {isSaving ? 'Saving...' : 'Save Changes'}
           </button>
         </div>
       </div>

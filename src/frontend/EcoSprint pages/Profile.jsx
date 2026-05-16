@@ -1,50 +1,65 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Leaf, LayoutDashboard, BookOpen, Zap, Trophy, LineChart, 
   Award, Bot, LogOut, ChevronRight, Camera, UserCog, 
-  MapPin, CheckCircle2, MessageSquare, Sun, Droplets, 
   Check, X, Key, Sun as SunIcon, Moon, Monitor
 } from 'lucide-react';
 import SidebarEcoDboard from '../../components/Sidebar/SidebarEcoDboard';
 import EditProfilepopup from '../../popup/EditProfilepopup';
 import Logoutpopup from '../../popup/Logoutpopup';
+import { getProfile } from '../../api';
 import styles from './Profile.module.css';
 
-// User data
-const userData = {
-  name: "Alex Rivera",
-  initials: "AR",
-  class: "11-B",
-  school: "Greenview High School",
-  bio: "Passionate about sustainable living and renewable energy. Working towards making our school the greenest in the district. 🌿",
-  interests: ["Solar Energy", "Recycling", "Urban Farming", "Policy"],
-  avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuAqWEfAx_tLU3phq8s_8srBHnFhBlyh2hvWeWuaObBjj94OzLUMI6RDbUrKK-HuTci8cfsK045Q4KpQgqDEchYoq5HVdr3msq2eZ2HDVDe8KrTjHYKLdn2pD3Y7may46JEWUO7duN3TGThY22EXfzkRBd3mONuAW_z4lTqWujyHkzMQ8UEBdboxR8jO0xUZGRyb8wsqY1Vyb3KXbmIqZzONeNS-CQxzQyoI5wT2tIRHNprCusVNQZZDRJNyTI8ubFz0s-6dKSPKcA",
+const defaultProfile = {
+  name: '',
+  initials: '',
+  bio: '',
+  interests: [],
+  avatarUrl: '',
   stats: {
-    ecoPoints: 1250,
-    level: "Level 4",
-    badges: 7,
-    schoolRank: "#42"
+    ecoPoints: 0,
+    level: 'Level 1',
+    badges: 0,
+    schoolRank: '#--'
   }
 };
 
-// Recent activity data
-const recentActivity = [
-  { type: 'quiz', title: 'Completed the Solar Systems quiz with 100% score.', time: '2 hours ago', icon: CheckCircle2, color: 'bg-green-100 text-green-600' },
-  { type: 'badge', title: 'Earned the "Early Bird" badge.', time: 'Yesterday', icon: Trophy, color: 'bg-amber-100 text-amber-600' },
-  { type: 'community', title: 'Shared a new eco-tip in the Community Forum.', time: '2 days ago', icon: MessageSquare, color: 'bg-blue-100 text-blue-600' }
-];
+const recentActivity = [];
 
-// Completed modules
-const completedModules = [
-  { name: "Solar Basics", score: "98%", icon: Sun },
-  { name: "Water Conservation", score: "92%", icon: Droplets }
-];
+const completedModules = [];
+
+const PROFILE_STORAGE_KEY = 'ecoSprintProfile';
+
+const buildProfileSnapshot = (profileData = {}) => ({
+  name: profileData.name || '',
+  initials: profileData.initials || '',
+  bio: profileData.bio || '',
+  interests: Array.isArray(profileData.interests) ? profileData.interests : [],
+  avatarUrl: profileData.avatarUrl || '',
+  stats: profileData.stats || {},
+  appearanceMode: profileData.appearanceMode || 'light',
+  volume: typeof profileData.volume === 'number' ? profileData.volume : 70,
+  notifications: profileData.notifications || { dailyChallenge: true, newModule: true },
+  dailyGoal: typeof profileData.dailyGoal === 'number' ? profileData.dailyGoal : 50,
+  reminderTime: profileData.reminderTime || '16:00',
+  email: profileData.email || ''
+});
+
+const persistProfileSnapshot = (profileData = {}) => {
+  const snapshot = buildProfileSnapshot(profileData);
+  localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(snapshot));
+  window.dispatchEvent(new CustomEvent('ecoSprintProfileUpdated', { detail: snapshot }));
+  return snapshot;
+};
 
 const Profile = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('profile');
   const [appearanceMode, setAppearanceMode] = useState('light');
+  const [volume, setVolume] = useState(70);
+  const [profile, setProfile] = useState(defaultProfile);
+  const [isProfileLoading, setIsProfileLoading] = useState(true);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -53,22 +68,97 @@ const Profile = () => {
     newModule: true
   });
 
+  const [currentEmail, setCurrentEmail] = useState(localStorage.getItem('userEmail') || '');
+
+  const loadProfile = async (emailOverride) => {
+    const emailToLoad = emailOverride || currentEmail;
+    if (!emailToLoad) {
+      setIsProfileLoading(false);
+      return;
+    }
+
+    try {
+      setIsProfileLoading(true);
+      const data = await getProfile(emailToLoad);
+      if (data?.email) {
+        setCurrentEmail(data.email);
+        localStorage.setItem('userEmail', data.email);
+      }
+      setProfile({
+        ...defaultProfile,
+        ...data,
+        stats: {
+          ...defaultProfile.stats,
+          ...(data.stats || {})
+        }
+      });
+      persistProfileSnapshot({
+        ...defaultProfile,
+        ...data,
+        stats: {
+          ...defaultProfile.stats,
+          ...(data.stats || {})
+        }
+      });
+      if (typeof data.volume === 'number') setVolume(data.volume);
+      if (data.appearanceMode) setAppearanceMode(data.appearanceMode);
+      if (data.notifications) setNotifications({
+        dailyChallenge: Boolean(data.notifications.dailyChallenge),
+        newModule: Boolean(data.notifications.newModule)
+      });
+    } catch (error) {
+      setProfile(defaultProfile);
+    } finally {
+      setIsProfileLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const latest = localStorage.getItem('userEmail') || '';
+    if (!currentEmail && latest) {
+      setCurrentEmail(latest);
+      return;
+    }
+    loadProfile();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentEmail]);
+
+  const profileInitials = useMemo(() => {
+    return (profile.name || 'AR')
+      .split(' ')
+      .filter(Boolean)
+      .map((part) => part[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  }, [profile.name]);
+
   const handleLogout = () => {
     navigate('/login');
   };
 
+  const volumeTrackStyle = {
+    background: `linear-gradient(to right, #4EA24E 0%, #4EA24E ${volume}%, #e2e8f0 ${volume}%, #e2e8f0 100%)`
+  };
+
   return (
-    <div className="min-h-screen bg-[#F8FAFC] font-sans text-slate-900">
+    <div className="h-screen bg-[#F8FAFC] font-sans text-slate-900 overflow-hidden flex">
       <SidebarEcoDboard />
       
       {/* Main Content */}
-      <main className="flex-1 ml-20 p-8">
+      <main className={`flex-1 ml-20 h-screen w-[calc(100%-5rem)] overflow-y-auto px-8 py-8 ${styles.customScrollbar}`}>
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm text-slate-500 mb-8">
           <button onClick={() => navigate('/dashboard')} className="hover:text-[#4EA24E] transition-colors">Dashboard</button>
           <ChevronRight className="w-4 h-4" />
           <span className="font-medium text-slate-800">My Profile</span>
         </nav>
+
+        {isProfileLoading && (
+          <div className="mb-6 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-500 shadow-sm">
+            Loading profile details...
+          </div>
+        )}
 
         {/* Profile Header Card */}
         <section className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden mb-8">
@@ -81,20 +171,18 @@ const Profile = () => {
             <div className="flex flex-col md:flex-row md:items-end gap-6 -mt-10">
               {/* Avatar */}
               <div className="relative w-32 h-32 rounded-3xl bg-slate-100 border-4 border-white shadow-md flex items-center justify-center text-3xl font-bold text-slate-400 overflow-hidden group/avatar">
-                {userData.initials}
+                {profile.avatarUrl ? (
+                  <img alt={profile.name} src={profile.avatarUrl} className="w-full h-full object-cover" />
+                ) : (
+                  profileInitials
+                )}
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/avatar:opacity-100 transition-opacity flex items-center justify-center cursor-pointer">
                   <Camera className="text-white w-8 h-8" />
                 </div>
               </div>
               {/* User Details */}
-              <div className="flex-1 pb-2">
-                <h1 className="text-3xl font-bold text-slate-900">{userData.name}</h1>
-                <div className="flex items-center gap-3 mt-1">
-                  <span className="px-3 py-1 bg-[#4EA24E]/10 text-[#4EA24E] text-xs font-bold rounded-full uppercase tracking-wider">Class 11</span>
-                  <span className="flex items-center gap-1 text-slate-400 text-sm">
-                    <MapPin className="w-4 h-4" /> {userData.school}
-                  </span>
-                </div>
+                <div className="flex-1 pb-2">
+                <h1 className="text-3xl font-bold text-slate-900">{profile.name || 'Your Profile'}</h1>
               </div>
               {/* Action Button */}
               <div className="pb-2">
@@ -117,7 +205,7 @@ const Profile = () => {
             </div>
             <div>
               <p className="text-xs text-slate-500 font-medium uppercase tracking-wider">Eco-Points</p>
-              <p className="text-xl font-bold text-slate-900">{userData.stats.ecoPoints.toLocaleString()}</p>
+              <p className="text-xl font-bold text-slate-900">{profile.stats.ecoPoints.toLocaleString()}</p>
             </div>
           </div>
           <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
@@ -126,7 +214,7 @@ const Profile = () => {
             </div>
             <div>
               <p className="text-xs text-slate-500 font-medium uppercase tracking-wider">Current Level</p>
-              <p className="text-xl font-bold text-slate-900">{userData.stats.level}</p>
+              <p className="text-xl font-bold text-slate-900">{profile.stats.level}</p>
             </div>
           </div>
           <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
@@ -135,7 +223,7 @@ const Profile = () => {
             </div>
             <div>
               <p className="text-xs text-slate-500 font-medium uppercase tracking-wider">Badges Earned</p>
-              <p className="text-xl font-bold text-slate-900">{userData.stats.badges}</p>
+              <p className="text-xl font-bold text-slate-900">{profile.stats.badges}</p>
             </div>
           </div>
           <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
@@ -144,7 +232,7 @@ const Profile = () => {
             </div>
             <div>
               <p className="text-xs text-slate-500 font-medium uppercase tracking-wider">School Rank</p>
-              <p className="text-xl font-bold text-slate-900">{userData.stats.schoolRank}</p>
+              <p className="text-xl font-bold text-slate-900">{profile.stats.schoolRank}</p>
             </div>
           </div>
         </div>
@@ -183,17 +271,19 @@ const Profile = () => {
                 <div className="lg:col-span-1 space-y-8">
                   <section>
                     <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Bio</h3>
-                    <p className="text-slate-600 leading-relaxed text-sm">{userData.bio}</p>
+                    <p className="text-slate-600 leading-relaxed text-sm">{profile.bio}</p>
                   </section>
                   <section>
                     <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Interests</h3>
                     <div className="flex flex-wrap gap-2">
-                      {userData.interests.map((interest, index) => (
+                      {profile.interests.map((interest, index) => (
                         <span key={index} className="px-3 py-1.5 bg-slate-100 text-slate-600 text-xs font-medium rounded-full">
                           {interest}
                         </span>
                       ))}
-                      <span className="px-3 py-1.5 bg-slate-100 text-slate-600 text-xs font-medium rounded-full">+2 more</span>
+                      {profile.interests.length === 0 && (
+                        <span className="px-3 py-1.5 bg-slate-100 text-slate-600 text-xs font-medium rounded-full">No interests yet</span>
+                      )}
                     </div>
                   </section>
                 </div>
@@ -240,6 +330,9 @@ const Profile = () => {
                         </div>
                       ))}
                     </div>
+                    {completedModules.length === 0 && (
+                      <p className="text-sm text-slate-500">No completed modules yet.</p>
+                    )}
                   </section>
                 </div>
               </div>
@@ -258,11 +351,21 @@ const Profile = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <label className="text-sm font-semibold text-slate-700">Full Name</label>
-                        <input className="w-full rounded-xl border-slate-200 focus:ring-[#4EA24E] focus:border-[#4EA24E] transition-all p-2.5 border" type="text" defaultValue="Alex Rivera" />
+                        <input
+                          className="w-full rounded-xl border-slate-200 focus:ring-[#4EA24E] focus:border-[#4EA24E] transition-all p-2.5 border"
+                          type="text"
+                          value={profile.name || ''}
+                          readOnly
+                        />
                       </div>
                       <div className="space-y-2">
                         <label className="text-sm font-semibold text-slate-700">Email Address</label>
-                        <input className="w-full rounded-xl border-slate-200 focus:ring-[#4EA24E] focus:border-[#4EA24E] transition-all p-2.5 border" type="email" defaultValue="alex.r@greenview.edu" />
+                        <input
+                          className="w-full rounded-xl border-slate-200 focus:ring-[#4EA24E] focus:border-[#4EA24E] transition-all p-2.5 border"
+                          type="email"
+                          value={currentEmail || ''}
+                          readOnly
+                        />
                       </div>
                     </div>
                     <button 
@@ -318,12 +421,45 @@ const Profile = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <label className="text-sm font-semibold text-slate-700">Daily Goal (Eco-Points)</label>
-                        <input className="w-full rounded-xl border-slate-200 focus:ring-[#4EA24E] p-2.5 border" type="number" defaultValue="50" />
+                        <input className="w-full rounded-xl border-slate-200 focus:ring-[#4EA24E] p-2.5 border" type="number" defaultValue={profile.dailyGoal || 50} />
                       </div>
                       <div className="space-y-2">
                         <label className="text-sm font-semibold text-slate-700">Reminder Time</label>
-                        <input className="w-full rounded-xl border-slate-200 focus:ring-[#4EA24E] p-2.5 border" type="time" defaultValue="16:00" />
+                        <input className="w-full rounded-xl border-slate-200 focus:ring-[#4EA24E] p-2.5 border" type="time" defaultValue={profile.reminderTime || '16:00'} />
                       </div>
+                    </div>
+                  </div>
+                </section>
+
+                <hr className="border-slate-100" />
+
+                {/* Sound / Volume */}
+                <section className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  <div className="col-span-1">
+                    <h4 className="text-lg font-bold text-slate-900">Sound</h4>
+                    <p className="text-sm text-slate-500">Adjust the in-app volume bar.</p>
+                  </div>
+                  <div className="col-span-2 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <label className="text-sm font-semibold text-slate-700">Volume</label>
+                      <span className="text-sm font-bold text-[#4EA24E]">{volume}%</span>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <span className="text-xs font-semibold text-slate-400">Mute</span>
+                      <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        value={volume}
+                        onChange={(e) => setVolume(Number(e.target.value))}
+                        className="w-full h-2 rounded-full appearance-none cursor-pointer"
+                        style={volumeTrackStyle}
+                      />
+                      <span className="text-xs font-semibold text-slate-400">Max</span>
+                    </div>
+                    <div className="flex items-center justify-between text-xs text-slate-400">
+                      <span>Low</span>
+                      <span>High</span>
                     </div>
                   </div>
                 </section>
@@ -374,7 +510,7 @@ const Profile = () => {
                     onClick={() => setShowLogoutModal(true)}
                     className="w-full sm:w-auto px-6 py-2.5 bg-[#D23B42] text-white font-bold rounded-xl hover:bg-rose-700 transition-colors shadow-md"
                   >
-                    Log Out {userData.name.split(' ')[0]}
+                    Log Out {profile.name.split(' ')[0]}
                   </button>
                 </section>
               </div>
@@ -385,7 +521,34 @@ const Profile = () => {
 
       {/* Edit Profile Modal */}
       {showEditModal && (
-        <EditProfilepopup onClose={() => setShowEditModal(false)} />
+        <EditProfilepopup
+          onClose={() => setShowEditModal(false)}
+          userEmail={currentEmail}
+          initialProfile={profile}
+          onSaved={async (updatedProfile) => {
+            const nextProfile = {
+              ...defaultProfile,
+              ...profile,
+              ...updatedProfile,
+              stats: {
+                ...defaultProfile.stats,
+                ...(profile.stats || {}),
+                ...(updatedProfile.stats || {})
+              }
+            };
+
+            setProfile(nextProfile);
+            persistProfileSnapshot(nextProfile);
+
+            if (updatedProfile.email) {
+              localStorage.setItem('userEmail', updatedProfile.email);
+              setCurrentEmail(updatedProfile.email);
+            }
+            if (typeof updatedProfile.volume === 'number') setVolume(updatedProfile.volume);
+            if (updatedProfile.appearanceMode) setAppearanceMode(updatedProfile.appearanceMode);
+            if (updatedProfile.notifications) setNotifications(updatedProfile.notifications);
+          }}
+        />
       )}
 
       {/* Change Password Modal */}
@@ -429,7 +592,7 @@ const Profile = () => {
       {showLogoutModal && (
         <Logoutpopup 
           onClose={() => setShowLogoutModal(false)}
-          userName={userData.name}
+          userName={profile.name}
           streakDays={7}
         />
       )}

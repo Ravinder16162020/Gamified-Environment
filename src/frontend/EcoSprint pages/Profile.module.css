@@ -7,16 +7,33 @@
 
 /* Custom scrollbar */
 .customScrollbar::-webkit-scrollbar {
-  width: 4px;
+  width: 8px;
 }
 
 .customScrollbar::-webkit-scrollbar-track {
   background: transparent;
 }
 
+.customScrollbar::-webkit-scrollbar-button {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
 .customScrollbar::-webkit-scrollbar-thumb {
-  background: #e2e8f0;
-  border-radius: 10px;
+  background: #4EA24E;
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.customScrollbar::-webkit-scrollbar-thumb:hover {
+  background: #3f8c3f;
+}
+
+.customScrollbar {
+  scrollbar-color: #4EA24E transparent;
+  scrollbar-width: thin;
 }
 
 /* Profile avatar offset */

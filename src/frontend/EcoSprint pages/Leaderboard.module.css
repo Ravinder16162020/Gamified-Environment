@@ -78,3 +78,26 @@
   transform: scale(1.1);
   transition: transform 0.2s ease;
 }
+
+/* Leaderboard page scrollbar */
+.mainScrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.mainScrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.mainScrollbar::-webkit-scrollbar-thumb {
+  background: #4EA24E;
+  border-radius: 9999px;
+}
+
+.mainScrollbar::-webkit-scrollbar-thumb:hover {
+  background: #3f8c3f;
+}
+
+.mainScrollbar {
+  scrollbar-color: #4EA24E transparent;
+  scrollbar-width: thin;
+}
